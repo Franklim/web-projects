@@ -8,6 +8,27 @@ module.exports = {
         return response.json(devs);
     },
 
+    async getDevByFilters(request, response) {
+        const { latitude, longitude, techs } = request.query;
+        const techsArray = FunctionsUtil.stringToArray(techs);
+
+        const devs = await Dev.find({
+            techs: {
+                $in: techsArray
+            },
+            location: {
+                $near: {
+                    $geometry: {
+                        type: 'Point',
+                        coordinates: [latitude, longitude]
+                    },
+                    $maxDistance: 10000
+                }
+            }
+        });
+        return response.json(devs)
+    },
+
     async store(request, response) {
         const url = 'https://api.github.com/users/'
         const { github, techs, latitude, longitude } = request.body;

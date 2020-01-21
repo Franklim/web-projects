@@ -1,7 +1,7 @@
 module.exports = {
 
-    stringToArray(string){
-        return string.split(',').map(x => x.trim());
+    stringToArray(valueToArray){
+        return valueToArray.split(',').map(value => value.trim());
     }
 
 }
