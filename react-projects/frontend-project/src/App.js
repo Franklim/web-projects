@@ -2,7 +2,7 @@ import React from 'react';
 import './global.css';
 import './App.css';
 import './SideBar.css'
-
+import './Main.css'
 function App() {
   return (
     <div id="app">
@@ -33,7 +33,54 @@ function App() {
           <button type="submit">Salvar</button>
         </form>
       </aside>
-      <main></main>
+      <main>
+        <ul>
+        <li className="dev-item">
+              <header>
+                <img src="https://avatars1.githubusercontent.com/u/9970061?s=460&v=4" alt="Franklim"/>
+                <div className="user-info">
+                  <strong>Paulo Franklim</strong>
+                  <span>Java, Node.js</span>
+                  <p>Biografia</p>
+                  <a href="https://github.com/franklim">Acessar perfil no Github</a>
+                </div>
+              </header>
+          </li>
+          <li className="dev-item">
+              <header>
+                <img src="https://avatars1.githubusercontent.com/u/9970061?s=460&v=4" alt="Franklim"/>
+                <div className="user-info">
+                  <strong>Paulo Franklim</strong>
+                  <span>Java, Node.js</span>
+                  <p>Biografia</p>
+                  <a href="https://github.com/franklim">Acessar perfil no Github</a>
+                </div>
+              </header>
+          </li>
+          <li className="dev-item">
+              <header>
+                <img src="https://avatars1.githubusercontent.com/u/9970061?s=460&v=4" alt="Franklim"/>
+                <div className="user-info">
+                  <strong>Paulo Franklim</strong>
+                  <span>Java, Node.js</span>
+                  <p>Biografia</p>
+                  <a href="https://github.com/franklim">Acessar perfil no Github</a>
+                </div>
+              </header>
+          </li>
+          <li className="dev-item">
+              <header>
+                <img src="https://avatars1.githubusercontent.com/u/9970061?s=460&v=4" alt="Franklim"/>
+                <div className="user-info">
+                  <strong>Paulo Franklim</strong>
+                  <span>Java, Node.js</span>
+                  <p>Biografia</p>
+                  <a href="https://github.com/franklim">Acessar perfil no Github</a>
+                </div>
+              </header>
+          </li>
+        </ul>
+      </main>
     </div>
   );
 }
