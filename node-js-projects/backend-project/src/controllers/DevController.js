@@ -58,6 +58,7 @@ module.exports = {
                 location
 
             })
+            console.log("CREATE DEVCONTROLLER")
         }
 
         return response.json({
