@@ -39,4 +39,9 @@ public class CheckController {
 	public boolean save(@RequestBody LotofacilBet bet) {
 		return service.saveBet(bet);
 	}
+
+	@RequestMapping(value = "/load-all", method = RequestMethod.POST)
+	public boolean loadAll(@RequestBody LotofacilBet vo) {
+		return service.loadAll(vo.getStart().intValue(), vo.getEnd().intValue());
+	}
 }

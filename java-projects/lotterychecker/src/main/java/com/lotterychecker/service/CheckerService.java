@@ -5,6 +5,8 @@ package com.lotterychecker.service;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -166,6 +168,57 @@ public class CheckerService {
 		}
 		LOG.debug("result=" + result);
 		LOG.debug("Exit method sendMail(MailCredentialsVO credentials)");
+		return result;
+	}
+
+	public boolean loadAll(int start, int end) {
+		LOG.debug("Entry method loadAll(int start, int end)");
+		boolean result = true;
+		LotofacilBet bet = null;
+		List<LotofacilResult> allCheckedResults = new ArrayList<>();
+		ObjectMapper mapper;
+		LotofacilApiResultVO apiResult;
+
+		try {
+			bet = betRepository.findById(Long.valueOf(1)).orElseThrow(RuntimeException::new);
+			LOG.debug("bet=" + bet);
+
+		} catch (Exception e) {
+			result = false;
+			LOG.error("Error while trying load bet");
+		}
+		if (bet != null) {
+			for (int i = start; i <= end; i++) {
+				mapper = new ObjectMapper();
+				apiResult = new LotofacilApiResultVO();
+
+				try {
+					String apiJson = CheckerUtil.getApiJSON(CheckerConstants.LOTOFACIL_ESPECIFIC_RESULT_URL + i);
+					apiResult = mapper.readValue(apiJson, LotofacilApiResultVO.class);
+				} catch (IOException e) {
+					result = false;
+					e.printStackTrace();
+					LOG.error("Error trying while create api object. " + e.getMessage());
+				}
+
+				String hittedNumbers = CheckerUtil.getHittedNumbers(bet.getNumbers(), apiResult.getNumbers());
+				LotofacilResult checkedResult = prepareResult(apiResult, hittedNumbers);
+				allCheckedResults.add(checkedResult);
+				LOG.debug("Result " + checkedResult.getId() + " added");
+
+			}
+
+		}
+		try {
+			resultRepository.saveAll(allCheckedResults);
+			LOG.debug("Saved all draws");
+		} catch (Exception e) {
+			result = false;
+			LOG.error("Error while saving checked result.");
+		}
+
+		LOG.debug("Exit method loadAll(int start, int end)");
+		LOG.info("Finished load all draws");
 		return result;
 	}
 
