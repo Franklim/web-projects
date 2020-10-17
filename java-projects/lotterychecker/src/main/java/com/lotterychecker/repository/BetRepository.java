@@ -3,10 +3,12 @@
  */
 package com.lotterychecker.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.lotterychecker.model.LotofacilBet;
+import com.lotterychecker.model.Bet;
 
 /**
  * <pre>
@@ -21,6 +23,8 @@ import com.lotterychecker.model.LotofacilBet;
  */
 
 @Repository
-public interface LotofacilBetRepository extends JpaRepository<LotofacilBet, Long> {
+public interface BetRepository extends JpaRepository<Bet, Long> {
+
+	public List<Bet> findAllByGame(String game);
 
 }

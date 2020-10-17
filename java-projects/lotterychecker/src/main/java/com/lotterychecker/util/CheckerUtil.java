@@ -11,14 +11,18 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.client.RestTemplate;
 
-import com.lotterychecker.model.LotofacilResult;
+import com.lotterychecker.model.CheckedResult;
+import com.lotterychecker.vo.MailCredentialsVO;
 
 /**
  * <pre>
@@ -35,7 +39,10 @@ import com.lotterychecker.model.LotofacilResult;
 public class CheckerUtil {
 	private static Logger LOG = LoggerFactory.getLogger(CheckerUtil.class);
 
-	public static void setPrize(LotofacilResult result) {
+	@Autowired
+	private static JavaMailSender mailSender;
+
+	public static void setPrize(CheckedResult result) {
 		LOG.debug("Entry method setPrize(LotofacilResult result)");
 		if (result.getHitNumber() < 11) {
 			result.setPrize(BigDecimal.ZERO);
@@ -72,6 +79,31 @@ public class CheckerUtil {
 		ResponseEntity<String> res = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 		return res.getBody();
 
+	}
+
+	public static boolean sendMail(MailCredentialsVO credentials) {
+		LOG.debug("Entry method sendMail(MailCredentialsVO credentials)");
+		LOG.debug("credentials" + credentials);
+		boolean result = true;
+
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setSubject(credentials.getSubject());
+		message.setTo(credentials.getTo());
+		message.setText(credentials.getMessage().toString());
+
+		try {
+			mailSender.send(message);
+			LOG.info("Send mail sucess");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = false;
+			LOG.error("Error while tryng send mail. " + e.getMessage());
+
+		}
+		LOG.debug("result=" + result);
+		LOG.debug("Exit method sendMail(MailCredentialsVO credentials)");
+		return result;
 	}
 
 }

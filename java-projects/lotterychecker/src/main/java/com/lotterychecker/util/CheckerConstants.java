@@ -24,11 +24,10 @@ public class CheckerConstants {
 	public static final BigDecimal PRIZE_13_HITS = new BigDecimal("25");
 
 	public static final String API_URL = "https://apiloterias.com.br/app/resultado?loteria=";
-	public static final String TOKEN_PREFIX = "&token=";
+	public static final String TOKEN_PREFIX = "&token=16Q6XoOUilHAaLG";
+
 	public static final String DRAW_NUMBER_PREFIX = "&concurso=";
-	public static final String TOKEN_VALUE = "16Q6XoOUilHAaLG";
 
 	public static final String LOTOFACIL = "lotofacil";
-	public static final String LOTOFACIL_LAST_RESULT_URL = API_URL + LOTOFACIL + TOKEN_PREFIX + TOKEN_VALUE;
-	public static final String LOTOFACIL_ESPECIFIC_RESULT_URL = LOTOFACIL_LAST_RESULT_URL + DRAW_NUMBER_PREFIX;
+
 }
