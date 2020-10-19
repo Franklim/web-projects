@@ -1,0 +1,41 @@
+/**
+ *
+ */
+package com.lotterychecker.controller;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.lotterychecker.model.Bet;
+import com.lotterychecker.service.BetService;
+
+/**
+ * <pre>
+ * Author         : Paulo Franklim, paulofranklim@hotmail.com
+ * Purpose        : <Purpose>
+ * Input files    : N/A
+ * Log File       : N/A
+ * Output file    : N/A
+ *
+ * Copyright 2020 github.com/franklim
+ * </pre>
+ */
+
+public class BetController {
+
+	private Logger LOG = LoggerFactory.getLogger(BetController.class);
+
+	@Autowired
+	private BetService service;
+
+	public String saveGame(@RequestBody Bet bet) {
+		LOG.debug("Entry method saveGame(@RequestBody Game game)");
+		Bet savedBet = service.saveBet(bet);
+		LOG.debug(savedBet.toString());
+		LOG.debug("Exit method saveGame(@RequestBody Game game)");
+		return "Bet for '" + savedBet.getGame() + "' created. id=" + savedBet.getId();
+	}
+
+}
