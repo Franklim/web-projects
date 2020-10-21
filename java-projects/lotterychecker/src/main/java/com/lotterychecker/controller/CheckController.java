@@ -4,12 +4,10 @@
 package com.lotterychecker.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lotterychecker.model.LotofacilBet;
 import com.lotterychecker.service.CheckerService;
 
 /**
@@ -30,18 +28,9 @@ public class CheckController {
 	@Autowired
 	CheckerService service;
 
-	@RequestMapping(value = "/check", method = RequestMethod.GET)
-	public void check() {
-		service.checkResult();
+	@RequestMapping(value = "/check-result", method = RequestMethod.POST)
+	public void check(String game) {
+		service.checkResult(game);
 	}
 
-	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public boolean save(@RequestBody LotofacilBet bet) {
-		return service.saveBet(bet);
-	}
-
-	@RequestMapping(value = "/load-all", method = RequestMethod.POST)
-	public boolean loadAll(@RequestBody LotofacilBet vo) {
-		return service.loadAll(vo.getStart().intValue(), vo.getEnd().intValue());
-	}
 }

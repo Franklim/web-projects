@@ -6,7 +6,7 @@ package com.lotterychecker.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.lotterychecker.model.LotofacilBet;
+import com.lotterychecker.model.Game;
 
 /**
  * <pre>
@@ -16,11 +16,11 @@ import com.lotterychecker.model.LotofacilBet;
  * Log File       : N/A
  * Output file    : N/A
  *
- * Copyright 2020 PFranklim
+ * Copyright 2020 github.com/franklim
  * </pre>
  */
 
 @Repository
-public interface LotofacilBetRepository extends JpaRepository<LotofacilBet, Long> {
+public interface GameRepository extends JpaRepository<Game, Long> {
 
 }

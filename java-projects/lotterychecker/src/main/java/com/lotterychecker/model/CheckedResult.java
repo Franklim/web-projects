@@ -21,31 +21,38 @@ import javax.persistence.Id;
  */
 
 @Entity
-public class LotofacilResult {
+public class CheckedResult {
 
 	@Id
 	private Long id;
+	private String name;
+	private User user;
+	private Long drawNumber;
 	private String date;
 	private String numbers;
 	private String hittedNumbers;
 	private int hitNumber;
 	private BigDecimal prize;
 
-	public LotofacilResult() {
+	public CheckedResult() {
 	}
 
 	/**
-	 * @param id
+	 * @param name
+	 * @param user
+	 * @param drawNumber
 	 * @param date
 	 * @param numbers
 	 * @param hittedNumbers
 	 * @param hitNumber
 	 * @param prize
 	 */
-	public LotofacilResult(Long id, String date, String numbers, String hittedNumbers, int hitNumber,
-			BigDecimal prize) {
+	public CheckedResult(String name, User user, Long drawNumber, String date, String numbers, String hittedNumbers,
+			int hitNumber, BigDecimal prize) {
 		super();
-		this.id = id;
+		this.name = name;
+		this.user = user;
+		this.drawNumber = drawNumber;
 		this.date = date;
 		this.numbers = numbers;
 		this.hittedNumbers = hittedNumbers;
@@ -65,6 +72,48 @@ public class LotofacilResult {
 	 */
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return the user
+	 */
+	public User getUser() {
+		return user;
+	}
+
+	/**
+	 * @param user the user to set
+	 */
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	/**
+	 * @return the drawNumber
+	 */
+	public Long getDrawNumber() {
+		return drawNumber;
+	}
+
+	/**
+	 * @param drawNumber the drawNumber to set
+	 */
+	public void setDrawNumber(Long drawNumber) {
+		this.drawNumber = drawNumber;
 	}
 
 	/**
@@ -139,8 +188,9 @@ public class LotofacilResult {
 
 	@Override
 	public String toString() {
-		return "LotofacilResult [id=" + id + ", date=" + date + ", numbers=" + numbers + ", hittedNumbers="
-				+ hittedNumbers + ", hitNumber=" + hitNumber + ", prize=" + prize + "]";
+		return "CheckedResult [id=" + id + ", name=" + name + ", user=" + user + ", drawNumber=" + drawNumber
+				+ ", date=" + date + ", numbers=" + numbers + ", hittedNumbers=" + hittedNumbers + ", hitNumber="
+				+ hitNumber + ", prize=" + prize + "]";
 	}
 
 }

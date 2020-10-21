@@ -4,6 +4,8 @@
 package com.lotterychecker.components;
 
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.lotterychecker.service.CheckerService;
+import com.lotterychecker.util.CheckerConstants;
 
 /**
  * <pre>
@@ -33,13 +36,16 @@ public class CheckerScheduled {
 	@Autowired
 	CheckerService service;
 
+	List<String> draws = Arrays.asList(CheckerConstants.LOTOFACIL);
+
 	@Scheduled(fixedDelay = 3600000)
 	private void scheduledCheck() {
 		LOG.debug("Entry method scheduledCheck()");
-		LOG.info(Instant.now() + " - Initializing check");
-
-		service.checkResult();
-
+		LOG.info("START CHECK - " + Instant.now());
+		for (String draw : draws) {
+			service.checkResult(draw);
+		}
+		LOG.info("END CHECK - " + Instant.now());
 		LOG.debug("Exit method scheduledCheck()");
 	}
 }

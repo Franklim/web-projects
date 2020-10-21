@@ -21,42 +21,46 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LotofacilApiResultVO {
+public class ApiResultVO {
 
 	@JsonProperty("numero_concurso")
-	private Long id;
+	private Long drawNumber;
 	@JsonProperty("data_concurso")
 	private String date;
 	@JsonProperty("dezenas")
 	private List<String> numbers;
+	@JsonProperty("nome")
+	private String name;
 
-	public LotofacilApiResultVO() {
+	public ApiResultVO() {
 	}
 
 	/**
-	 * @param id
+	 * @param drawNumber
 	 * @param date
 	 * @param numbers
+	 * @param name
 	 */
-	public LotofacilApiResultVO(Long id, String date, List<String> numbers) {
+	public ApiResultVO(Long drawNumber, String date, List<String> numbers, String name) {
 		super();
-		this.id = id;
+		this.drawNumber = drawNumber;
 		this.date = date;
 		this.numbers = numbers;
+		this.name = name;
 	}
 
 	/**
-	 * @return the id
+	 * @return the drawNumber
 	 */
-	public Long getId() {
-		return id;
+	public Long getDrawNumber() {
+		return drawNumber;
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param drawNumber the drawNumber to set
 	 */
-	public void setId(Long id) {
-		this.id = id;
+	public void setDrawNumber(Long drawNumber) {
+		this.drawNumber = drawNumber;
 	}
 
 	/**
@@ -87,9 +91,24 @@ public class LotofacilApiResultVO {
 		this.numbers = numbers;
 	}
 
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	@Override
 	public String toString() {
-		return "LotofacilResult [id=" + id + ", date=" + date + ", numbers=" + numbers + "]";
+		return "ApiResultVO [drawNumber=" + drawNumber + ", date=" + date + ", numbers=" + numbers + ", name=" + name
+				+ "]";
 	}
 
 }

@@ -19,7 +19,7 @@ public class MailCredentialsVO {
 
 	private String subject;
 	private String to;
-	private String message;
+	private StringBuilder message;
 
 	public MailCredentialsVO() {
 	}
@@ -29,7 +29,7 @@ public class MailCredentialsVO {
 	 * @param to
 	 * @param message
 	 */
-	public MailCredentialsVO(String subject, String to, String message) {
+	public MailCredentialsVO(String subject, String to, StringBuilder message) {
 		super();
 		this.subject = subject;
 		this.to = to;
@@ -67,20 +67,20 @@ public class MailCredentialsVO {
 	/**
 	 * @return the message
 	 */
-	public String getMessage() {
+	public StringBuilder getMessage() {
 		return message;
 	}
 
 	/**
 	 * @param message the message to set
 	 */
-	public void setMessage(String message) {
+	public void setMessage(StringBuilder message) {
 		this.message = message;
 	}
 
 	@Override
 	public String toString() {
-		return "MailCredentialsVO [subject=" + subject + ", to=" + to + ", message=" + message + "]";
+		return "MailCredentialsVO [subject=" + subject + ", to=" + to + ", message=" + message.toString() + "]";
 	}
 
 }
