@@ -4,9 +4,13 @@
 package com.lotterychecker.model;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 /**
  * <pre>
@@ -21,6 +25,7 @@ import javax.persistence.Id;
  */
 
 @Entity
+@Table(name = "game")
 public class Game {
 
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,6 +34,9 @@ public class Game {
 	private String name;
 	private int numberMin;
 	private int numberMax;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id")
+	private Bet bet;
 
 	public Game() {
 	}
@@ -39,8 +47,9 @@ public class Game {
 	 * @param numberMin
 	 * @param numberMax
 	 */
-	public Game(String name, int numberMin, int numberMax) {
+	public Game(Long id, String name, int numberMin, int numberMax) {
 		super();
+		this.id = id;
 		this.name = name;
 		this.numberMin = numberMin;
 		this.numberMax = numberMax;

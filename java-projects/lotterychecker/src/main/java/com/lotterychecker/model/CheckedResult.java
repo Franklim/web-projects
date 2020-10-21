@@ -5,8 +5,11 @@ package com.lotterychecker.model;
 
 import java.math.BigDecimal;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  * <pre>
@@ -26,6 +29,7 @@ public class CheckedResult {
 	@Id
 	private Long id;
 	private String name;
+	@OneToOne(mappedBy = "bet", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
 	private User user;
 	private Long drawNumber;
 	private String date;

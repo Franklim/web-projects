@@ -4,9 +4,12 @@
 package com.lotterychecker.model;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 /**
  * <pre>
@@ -29,6 +32,9 @@ public class User {
 	private String name;
 	private String mail;
 	private String password;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id")
+	private Bet bet;
 
 	public User() {
 

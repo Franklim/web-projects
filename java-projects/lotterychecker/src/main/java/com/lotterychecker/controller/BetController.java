@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.lotterychecker.model.Bet;
 import com.lotterychecker.service.BetService;
@@ -30,6 +32,7 @@ public class BetController {
 	@Autowired
 	private BetService service;
 
+	@RequestMapping(value = "save-bet", method = RequestMethod.POST)
 	public String saveGame(@RequestBody Bet bet) {
 		LOG.debug("Entry method saveGame(@RequestBody Game game)");
 		Bet savedBet = service.saveBet(bet);

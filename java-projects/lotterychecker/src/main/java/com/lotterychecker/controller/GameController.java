@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lotterychecker.model.Game;
@@ -32,6 +34,7 @@ public class GameController {
 	@Autowired
 	private GameService service;
 
+	@RequestMapping(value = "save-game", method = RequestMethod.POST)
 	public String saveGame(@RequestBody Game game) {
 		LOG.debug("Entry method saveGame(@RequestBody Game game)");
 		Game savedGame = service.saveGame(game);

@@ -5,10 +5,13 @@ package com.lotterychecker.model;
 
 import java.math.BigDecimal;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  * <pre>
@@ -28,8 +31,12 @@ public class Bet {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+
+	@OneToOne(mappedBy = "bet", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
 	private User user;
+	@OneToOne(mappedBy = "bet", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
 	private Game game;
+
 	private int firstDraw;
 	private int lastDraw;
 	private BigDecimal accumulatedPrize;
@@ -40,6 +47,7 @@ public class Bet {
 	}
 
 	/**
+	 * @param id
 	 * @param user
 	 * @param game
 	 * @param firstDraw
@@ -47,8 +55,10 @@ public class Bet {
 	 * @param accumulatedPrize
 	 * @param numbers
 	 */
-	public Bet(User user, Game game, int firstDraw, int lastDraw, BigDecimal accumulatedPrize, String numbers) {
+	public Bet(Long id, User user, Game game, int firstDraw, int lastDraw, BigDecimal accumulatedPrize,
+			String numbers) {
 		super();
+		this.id = id;
 		this.user = user;
 		this.game = game;
 		this.firstDraw = firstDraw;
