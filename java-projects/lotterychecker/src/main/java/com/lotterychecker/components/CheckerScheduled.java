@@ -24,28 +24,28 @@ import com.lotterychecker.util.CheckerConstants;
  * Log File       : N/A
  * Output file    : N/A
  *
- * Copyright 2020 github.com/franklim
+ * Copyright 2020 github.com/pfranklim
  * </pre>
  */
 
 @Component
 public class CheckerScheduled {
-
-	private static final Logger LOG = LoggerFactory.getLogger(CheckerScheduled.class);
-
-	@Autowired
-	CheckerService service;
-
-	List<String> draws = Arrays.asList(CheckerConstants.LOTOFACIL);
-
-	@Scheduled(fixedDelay = 3600000)
-	private void scheduledCheck() {
-		LOG.debug("Entry method scheduledCheck()");
-		LOG.info("START CHECK - " + Instant.now());
-		for (String draw : draws) {
-			service.checkResult(draw);
-		}
-		LOG.info("END CHECK - " + Instant.now());
-		LOG.debug("Exit method scheduledCheck()");
+    
+    private static final Logger	LOG   = LoggerFactory.getLogger(CheckerScheduled.class);
+    
+    @Autowired
+    CheckerService		service;
+    
+    List<String>		draws = Arrays.asList(CheckerConstants.LOTOFACIL);
+    
+    @Scheduled(fixedDelay = 3600000)
+    private void scheduledCheck() {
+	LOG.debug("Entry method scheduledCheck()");
+	LOG.info("START CHECK - " + Instant.now());
+	for (String draw : draws) {
+	    service.checkResult(draw);
 	}
+	LOG.info("END CHECK - " + Instant.now());
+	LOG.debug("Exit method scheduledCheck()");
+    }
 }

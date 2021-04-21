@@ -16,23 +16,23 @@ import javax.persistence.Id;
  * Log File       : N/A
  * Output file    : N/A
  *
- * Copyright 2020 github.com/franklim
+ * Copyright 2020 github.com/pfranklim
  * </pre>
  */
 
 @Entity
 public class Game {
-    
+
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     private Long   id;
     private String name;
     private int	   numberMin;
     private int	   numberMax;
-    
+
     public Game() {
     }
-    
+
     /**
      * @param id
      * @param name
@@ -46,14 +46,14 @@ public class Game {
 	this.numberMin = numberMin;
 	this.numberMax = numberMax;
     }
-    
+
     /**
      * @return the id
      */
     public Long getId() {
 	return id;
     }
-    
+
     /**
      * @param id
      *            the id to set
@@ -61,14 +61,14 @@ public class Game {
     public void setId(Long id) {
 	this.id = id;
     }
-    
+
     /**
      * @return the name
      */
     public String getName() {
 	return name;
     }
-    
+
     /**
      * @param name
      *            the name to set
@@ -76,14 +76,14 @@ public class Game {
     public void setName(String name) {
 	this.name = name;
     }
-    
+
     /**
      * @return the numberMin
      */
     public int getNumberMin() {
 	return numberMin;
     }
-    
+
     /**
      * @param numberMin
      *            the numberMin to set
@@ -91,14 +91,14 @@ public class Game {
     public void setNumberMin(int numberMin) {
 	this.numberMin = numberMin;
     }
-    
+
     /**
      * @return the numberMax
      */
     public int getNumberMax() {
 	return numberMax;
     }
-    
+
     /**
      * @param numberMax
      *            the numberMax to set
@@ -106,10 +106,10 @@ public class Game {
     public void setNumberMax(int numberMax) {
 	this.numberMax = numberMax;
     }
-    
+
     @Override
     public String toString() {
 	return "Game [id=" + id + ", name=" + name + ", numberMin=" + numberMin + ", numberMax=" + numberMax + "]";
     }
-    
+
 }

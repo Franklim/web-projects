@@ -19,20 +19,20 @@ import com.lotterychecker.service.CheckerService;
  * Log File       : N/A
  * Output file    : N/A
  *
- * Copyright 2020 github.com/franklim
+ * Copyright 2020 github.com/pfranklim
  * </pre>
  */
 
 @RestController
 public class CheckController {
-
+    
     @Autowired
     CheckerService service;
-
+    
     @RequestMapping(value = "/check-result/{game}", method = RequestMethod.GET)
     public String check(@PathVariable("game") String game) {
 	service.checkResult(game);
 	return "OK";
     }
-
+    
 }

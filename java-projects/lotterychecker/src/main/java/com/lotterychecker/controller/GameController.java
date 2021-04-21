@@ -22,18 +22,18 @@ import com.lotterychecker.service.GameService;
  * Log File       : N/A
  * Output file    : N/A
  *
- * Copyright 2020 github.com/franklim
+ * Copyright 2020 github.com/pfranklim
  * </pre>
  */
 
 @RestController
 public class GameController {
-    
+
     private Logger	LOG = LoggerFactory.getLogger(GameController.class);
-    
+
     @Autowired
     private GameService	service;
-    
+
     @RequestMapping(value = "save-game", method = RequestMethod.POST)
     public String saveGame(@RequestBody Game game) {
 	LOG.debug("Entry method saveGame(@RequestBody Game game)");
@@ -42,5 +42,5 @@ public class GameController {
 	LOG.debug("Exit method saveGame(@RequestBody Game game)");
 	return "Game '" + savedGame.getName() + "' created. id=" + savedGame.getId();
     }
-    
+
 }

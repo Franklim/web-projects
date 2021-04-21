@@ -22,25 +22,25 @@ import com.lotterychecker.service.UserService;
  * Log File       : N/A
  * Output file    : N/A
  *
- * Copyright 2020 github.com/franklim
+ * Copyright 2020 github.com/pfranklim
  * </pre>
  */
 
 @RestController
 public class UserController {
-
-	private Logger LOG = LoggerFactory.getLogger(UserController.class);
-
-	@Autowired
-	private UserService service;
-
-	@RequestMapping(value = "save-user", method = RequestMethod.POST)
-	public String saveUser(@RequestBody User user) {
-		LOG.debug("Entry method saveUser(@RequestBody User user)");
-		User savedUser = service.saveUser(user);
-		LOG.debug(savedUser.toString());
-		LOG.debug("Exit method saveUser(@RequestBody User user)");
-		return "User '" + savedUser.getName() + "' created. id=" + savedUser.getId();
-	}
-
+    
+    private Logger	LOG = LoggerFactory.getLogger(UserController.class);
+    
+    @Autowired
+    private UserService	service;
+    
+    @RequestMapping(value = "save-user", method = RequestMethod.POST)
+    public String saveUser(@RequestBody User user) {
+	LOG.debug("Entry method saveUser(@RequestBody User user)");
+	User savedUser = service.saveUser(user);
+	LOG.debug(savedUser.toString());
+	LOG.debug("Exit method saveUser(@RequestBody User user)");
+	return "User '" + savedUser.getName() + "' created. id=" + savedUser.getId();
+    }
+    
 }

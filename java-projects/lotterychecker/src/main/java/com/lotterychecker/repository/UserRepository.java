@@ -16,10 +16,10 @@ import com.lotterychecker.model.User;
  * Log File       : N/A
  * Output file    : N/A
  *
- * Copyright 2020 github.com/franklim
+ * Copyright 2020 github.com/pfranklim
  * </pre>
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-
+    
 }

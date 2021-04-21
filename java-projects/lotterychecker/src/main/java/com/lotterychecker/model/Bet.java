@@ -18,13 +18,13 @@ import javax.persistence.Id;
  * Log File       : N/A
  * Output file    : N/A
  *
- * Copyright 2020 github.com/franklim
+ * Copyright 2020 github.com/pfranklim
  * </pre>
  */
 
 @Entity
 public class Bet {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long       id;
@@ -34,10 +34,10 @@ public class Bet {
     private String     numbers;
     private Long       userId;
     private Long       gameId;
-
+    
     public Bet() {
     }
-    
+
     /**
      * @param id
      * @param firstDraw
@@ -57,14 +57,14 @@ public class Bet {
 	this.userId = userId;
 	this.gameId = gameId;
     }
-    
+
     /**
      * @return the id
      */
     public Long getId() {
 	return id;
     }
-    
+
     /**
      * @param id
      *            the id to set
@@ -72,14 +72,14 @@ public class Bet {
     public void setId(Long id) {
 	this.id = id;
     }
-    
+
     /**
      * @return the firstDraw
      */
     public int getFirstDraw() {
 	return firstDraw;
     }
-    
+
     /**
      * @param firstDraw
      *            the firstDraw to set
@@ -87,14 +87,14 @@ public class Bet {
     public void setFirstDraw(int firstDraw) {
 	this.firstDraw = firstDraw;
     }
-    
+
     /**
      * @return the lastDraw
      */
     public int getLastDraw() {
 	return lastDraw;
     }
-    
+
     /**
      * @param lastDraw
      *            the lastDraw to set
@@ -102,14 +102,14 @@ public class Bet {
     public void setLastDraw(int lastDraw) {
 	this.lastDraw = lastDraw;
     }
-    
+
     /**
      * @return the accumulatedPrize
      */
     public BigDecimal getAccumulatedPrize() {
 	return accumulatedPrize;
     }
-    
+
     /**
      * @param accumulatedPrize
      *            the accumulatedPrize to set
@@ -117,14 +117,14 @@ public class Bet {
     public void setAccumulatedPrize(BigDecimal accumulatedPrize) {
 	this.accumulatedPrize = accumulatedPrize;
     }
-    
+
     /**
      * @return the numbers
      */
     public String getNumbers() {
 	return numbers;
     }
-    
+
     /**
      * @param numbers
      *            the numbers to set
@@ -132,14 +132,14 @@ public class Bet {
     public void setNumbers(String numbers) {
 	this.numbers = numbers;
     }
-    
+
     /**
      * @return the userId
      */
     public Long getUserId() {
 	return userId;
     }
-    
+
     /**
      * @param userId
      *            the userId to set
@@ -147,14 +147,14 @@ public class Bet {
     public void setUserId(Long userId) {
 	this.userId = userId;
     }
-    
+
     /**
      * @return the gameId
      */
     public Long getGameId() {
 	return gameId;
     }
-    
+
     /**
      * @param gameId
      *            the gameId to set
@@ -162,11 +162,11 @@ public class Bet {
     public void setGameId(Long gameId) {
 	this.gameId = gameId;
     }
-    
+
     @Override
     public String toString() {
 	return "Bet [id=" + id + ", firstDraw=" + firstDraw + ", lastDraw=" + lastDraw + ", accumulatedPrize=" + accumulatedPrize + ", numbers=" + numbers
 	        + ", userId=" + userId + ", gameId=" + gameId + "]";
     }
-    
+
 }

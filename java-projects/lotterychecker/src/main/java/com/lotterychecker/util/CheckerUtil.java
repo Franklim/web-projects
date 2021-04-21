@@ -28,13 +28,13 @@ import com.lotterychecker.model.CheckedResult;
  * Log File       : N/A
  * Output file    : N/A
  *
- * Copyright 2020 github.com/franklim
+ * Copyright 2020 github.com/pfranklim
  * </pre>
  */
 
 public class CheckerUtil {
     private static Logger LOG = LoggerFactory.getLogger(CheckerUtil.class);
-    
+
     public static void setPrize(CheckedResult result) {
 	LOG.debug("Entry method setPrize(LotofacilResult result)");
 	if (result.getHitNumber() < 11) {
@@ -50,17 +50,17 @@ public class CheckerUtil {
 	}
 	LOG.debug("Exit method setPrize(LotofacilResult result)");
     }
-    
+
     public static String getHittedNumbers(String bet, List<String> drawNumbers) {
 	LOG.debug("Entry method getHittedNumbers(String bet, String result)");
-	
+
 	List<String> betNumbers = Arrays.asList(bet.split(","));
 	Set<String> hittedNumbers = betNumbers.stream().distinct().filter(drawNumbers::contains).collect(Collectors.toSet());
-	
+
 	LOG.debug("Exit method getHittedNumbers(String bet, String result)");
 	return hittedNumbers.toString().replace(" ", "").replace("[", "").replace("]", "");
     }
-    
+
     public static String getApiJSON(String url) {
 	RestTemplate restTemplate = new RestTemplate();
 	HttpHeaders headers = new HttpHeaders();
@@ -69,7 +69,7 @@ public class CheckerUtil {
 	HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
 	ResponseEntity<String> res = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 	return res.getBody();
-	
+
     }
-    
+
 }
