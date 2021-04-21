@@ -5,11 +5,10 @@ package com.lotterychecker.model;
 
 import java.math.BigDecimal;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 
 /**
  * <pre>
@@ -26,175 +25,185 @@ import javax.persistence.OneToOne;
 @Entity
 public class CheckedResult {
 
-	@Id
-	private Long id;
-	private String name;
-	@OneToOne(mappedBy = "bet", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-	private User user;
-	private Long drawNumber;
-	private String date;
-	private String numbers;
-	private String hittedNumbers;
-	private int hitNumber;
-	private BigDecimal prize;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long       id;
+    private String     name;
+    private Long       drawNumber;
+    private String     date;
+    private String     numbers;
+    private String     hittedNumbers;
+    private int	       hitNumber;
+    private BigDecimal prize;
+    private Long       userId;
+    
+    public CheckedResult() {
+    }
 
-	public CheckedResult() {
-	}
+    /**
+     * @param id
+     * @param name
+     * @param drawNumber
+     * @param date
+     * @param numbers
+     * @param hittedNumbers
+     * @param hitNumber
+     * @param prize
+     * @param userId
+     */
+    public CheckedResult(Long id, String name, Long drawNumber, String date, String numbers, String hittedNumbers, int hitNumber, BigDecimal prize,
+            Long userId) {
+	super();
+	this.id = id;
+	this.name = name;
+	this.drawNumber = drawNumber;
+	this.date = date;
+	this.numbers = numbers;
+	this.hittedNumbers = hittedNumbers;
+	this.hitNumber = hitNumber;
+	this.prize = prize;
+	this.userId = userId;
+    }
 
-	/**
-	 * @param name
-	 * @param user
-	 * @param drawNumber
-	 * @param date
-	 * @param numbers
-	 * @param hittedNumbers
-	 * @param hitNumber
-	 * @param prize
-	 */
-	public CheckedResult(String name, User user, Long drawNumber, String date, String numbers, String hittedNumbers,
-			int hitNumber, BigDecimal prize) {
-		super();
-		this.name = name;
-		this.user = user;
-		this.drawNumber = drawNumber;
-		this.date = date;
-		this.numbers = numbers;
-		this.hittedNumbers = hittedNumbers;
-		this.hitNumber = hitNumber;
-		this.prize = prize;
-	}
+    /**
+     * @return the id
+     */
+    public Long getId() {
+	return id;
+    }
 
-	/**
-	 * @return the id
-	 */
-	public Long getId() {
-		return id;
-	}
+    /**
+     * @param id
+     *            the id to set
+     */
+    public void setId(Long id) {
+	this.id = id;
+    }
 
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
+    /**
+     * @return the name
+     */
+    public String getName() {
+	return name;
+    }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+    /**
+     * @param name
+     *            the name to set
+     */
+    public void setName(String name) {
+	this.name = name;
+    }
 
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * @return the drawNumber
+     */
+    public Long getDrawNumber() {
+	return drawNumber;
+    }
 
-	/**
-	 * @return the user
-	 */
-	public User getUser() {
-		return user;
-	}
+    /**
+     * @param drawNumber
+     *            the drawNumber to set
+     */
+    public void setDrawNumber(Long drawNumber) {
+	this.drawNumber = drawNumber;
+    }
 
-	/**
-	 * @param user the user to set
-	 */
-	public void setUser(User user) {
-		this.user = user;
-	}
+    /**
+     * @return the date
+     */
+    public String getDate() {
+	return date;
+    }
 
-	/**
-	 * @return the drawNumber
-	 */
-	public Long getDrawNumber() {
-		return drawNumber;
-	}
+    /**
+     * @param date
+     *            the date to set
+     */
+    public void setDate(String date) {
+	this.date = date;
+    }
 
-	/**
-	 * @param drawNumber the drawNumber to set
-	 */
-	public void setDrawNumber(Long drawNumber) {
-		this.drawNumber = drawNumber;
-	}
+    /**
+     * @return the numbers
+     */
+    public String getNumbers() {
+	return numbers;
+    }
 
-	/**
-	 * @return the date
-	 */
-	public String getDate() {
-		return date;
-	}
+    /**
+     * @param numbers
+     *            the numbers to set
+     */
+    public void setNumbers(String numbers) {
+	this.numbers = numbers;
+    }
 
-	/**
-	 * @param date the date to set
-	 */
-	public void setDate(String date) {
-		this.date = date;
-	}
+    /**
+     * @return the hittedNumbers
+     */
+    public String getHittedNumbers() {
+	return hittedNumbers;
+    }
 
-	/**
-	 * @return the numbers
-	 */
-	public String getNumbers() {
-		return numbers;
-	}
+    /**
+     * @param hittedNumbers
+     *            the hittedNumbers to set
+     */
+    public void setHittedNumbers(String hittedNumbers) {
+	this.hittedNumbers = hittedNumbers;
+    }
 
-	/**
-	 * @param numbers the numbers to set
-	 */
-	public void setNumbers(String numbers) {
-		this.numbers = numbers;
-	}
+    /**
+     * @return the hitNumber
+     */
+    public int getHitNumber() {
+	return hitNumber;
+    }
 
-	/**
-	 * @return the hittedNumbers
-	 */
-	public String getHittedNumbers() {
-		return hittedNumbers;
-	}
+    /**
+     * @param hitNumber
+     *            the hitNumber to set
+     */
+    public void setHitNumber(int hitNumber) {
+	this.hitNumber = hitNumber;
+    }
 
-	/**
-	 * @param hittedNumbers the hittedNumbers to set
-	 */
-	public void setHittedNumbers(String hittedNumbers) {
-		this.hittedNumbers = hittedNumbers;
-	}
+    /**
+     * @return the prize
+     */
+    public BigDecimal getPrize() {
+	return prize;
+    }
 
-	/**
-	 * @return the hitNumber
-	 */
-	public int getHitNumber() {
-		return hitNumber;
-	}
+    /**
+     * @param prize
+     *            the prize to set
+     */
+    public void setPrize(BigDecimal prize) {
+	this.prize = prize;
+    }
 
-	/**
-	 * @param hitNumber the hitNumber to set
-	 */
-	public void setHitNumber(int hitNumber) {
-		this.hitNumber = hitNumber;
-	}
+    /**
+     * @return the userId
+     */
+    public Long getUserId() {
+	return userId;
+    }
 
-	/**
-	 * @return the prize
-	 */
-	public BigDecimal getPrize() {
-		return prize;
-	}
+    /**
+     * @param userId
+     *            the userId to set
+     */
+    public void setUserId(Long userId) {
+	this.userId = userId;
+    }
 
-	/**
-	 * @param prize the prize to set
-	 */
-	public void setPrize(BigDecimal prize) {
-		this.prize = prize;
-	}
-
-	@Override
-	public String toString() {
-		return "CheckedResult [id=" + id + ", name=" + name + ", user=" + user + ", drawNumber=" + drawNumber
-				+ ", date=" + date + ", numbers=" + numbers + ", hittedNumbers=" + hittedNumbers + ", hitNumber="
-				+ hitNumber + ", prize=" + prize + "]";
-	}
+    @Override
+    public String toString() {
+	return "CheckedResult [id=" + id + ", name=" + name + ", drawNumber=" + drawNumber + ", date=" + date + ", numbers=" + numbers + ", hittedNumbers="
+	        + hittedNumbers + ", hitNumber=" + hitNumber + ", prize=" + prize + ", userId=" + userId + "]";
+    }
 
 }

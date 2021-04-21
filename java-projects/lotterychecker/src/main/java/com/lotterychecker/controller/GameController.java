@@ -28,19 +28,19 @@ import com.lotterychecker.service.GameService;
 
 @RestController
 public class GameController {
-
-	private Logger LOG = LoggerFactory.getLogger(GameController.class);
-
-	@Autowired
-	private GameService service;
-
-	@RequestMapping(value = "save-game", method = RequestMethod.POST)
-	public String saveGame(@RequestBody Game game) {
-		LOG.debug("Entry method saveGame(@RequestBody Game game)");
-		Game savedGame = service.saveGame(game);
-		LOG.debug(savedGame.toString());
-		LOG.debug("Exit method saveGame(@RequestBody Game game)");
-		return "Game '" + savedGame.getName() + "' created. id=" + savedGame.getId();
-	}
-
+    
+    private Logger	LOG = LoggerFactory.getLogger(GameController.class);
+    
+    @Autowired
+    private GameService	service;
+    
+    @RequestMapping(value = "save-game", method = RequestMethod.POST)
+    public String saveGame(@RequestBody Game game) {
+	LOG.debug("Entry method saveGame(@RequestBody Game game)");
+	Game savedGame = service.saveGame(game);
+	LOG.debug(savedGame.toString());
+	LOG.debug("Exit method saveGame(@RequestBody Game game)");
+	return "Game '" + savedGame.getName() + "' created. id=" + savedGame.getId();
+    }
+    
 }
