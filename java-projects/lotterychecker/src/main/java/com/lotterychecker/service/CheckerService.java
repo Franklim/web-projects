@@ -5,10 +5,7 @@ package com.lotterychecker.service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +18,11 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lotterychecker.model.Bet;
 import com.lotterychecker.model.CheckedResult;
+import com.lotterychecker.model.Game;
 import com.lotterychecker.model.User;
 import com.lotterychecker.repository.BetRepository;
 import com.lotterychecker.repository.CheckedResultRepository;
+import com.lotterychecker.repository.GameRepository;
 import com.lotterychecker.repository.UserRepository;
 import com.lotterychecker.util.CheckerUtil;
 import com.lotterychecker.vo.ApiResultVO;
@@ -43,18 +42,17 @@ import com.lotterychecker.vo.MailCredentialsVO;
 
 @Service
 public class CheckerService {
+    private Logger		    LOG	 = LoggerFactory.getLogger(CheckerService.class);
+    
+    private String		    LINE = "\n";
+    
+    private ApiResultVO		    apiResultVO;
 
     @Value("${application.prop.api.url}")
     private String		    API_URL;
 
     @Value("${application.prop.api.token}")
     private String		    TOKEN_PREFIX;
-
-    private Logger		    LOG	      = LoggerFactory.getLogger(CheckerService.class);
-
-    private Map<String, Long>	    lastDraws = new HashMap<String, Long>();
-
-    private String		    LINE      = "\n";
 
     @Autowired
     private CheckedResultRepository resultRepository;
@@ -64,57 +62,49 @@ public class CheckerService {
     
     @Autowired
     private UserRepository	    userRepository;
+    
+    @Autowired
+    private GameRepository	    gameRepository;
 
     @Autowired
     private JavaMailSender	    mailSender;
     
-    public void checkResult(String game) {
+    public void checkResult(String gameName) {
 	LOG.debug("Entry method checkResult()");
 
-	ObjectMapper mapper = new ObjectMapper();
-	ApiResultVO apiResultVO = null;
-
-	String URL = API_URL + game + TOKEN_PREFIX;
+	String URL = API_URL + gameName + TOKEN_PREFIX;
 	try {
 	    String apiJson = CheckerUtil.getApiJSON(URL);
-	    apiResultVO = mapper.readValue(apiJson, ApiResultVO.class);
+	    apiResultVO = new ObjectMapper().readValue(apiJson, ApiResultVO.class);
 	}
 	catch (IOException e) {
 	    e.printStackTrace();
 	    LOG.error("Error trying while create api object. " + e.getMessage());
 	}
+	
+	Game game = gameRepository.findGameByName(gameName);
+	List<Bet> bets = betRepository.findAll();
 
-	// TODO: lastDraws logic
-	// Long drawNumber = lastDraws.get(game);
-	Long drawNumber = Long.valueOf(0);
-	if (drawNumber.compareTo(apiResultVO.getDrawNumber()) < 1) {
-
-	    List<Bet> bets = null;
-	    try {
-		// TODO: Query for specific game
-		bets = betRepository.findAll();
-		LOG.debug("bet=" + bets);
-
-	    }
-	    catch (Exception e) {
-		LOG.error("Error while trying load bet");
-		LOG.error(e.getMessage());
-		LOG.error(e.getLocalizedMessage());
-	    }
-
+	if (game != null && game.getLastDraw().compareTo(apiResultVO.getDrawNumber()) == -1) {
+	    
 	    if (bets != null && bets.size() > 0) {
-		Long lastUserId = null;
-		StringBuilder message = null;
-		MailCredentialsVO mailCredentials = null;
-		List<MailCredentialsVO> mailCredentialsList = new ArrayList<MailCredentialsVO>();
-
+		
 		for (Bet bet : bets) {
+		    User user = userRepository.findById(bet.getUserId()).orElse(null);
 
 		    String hittedNumbers = CheckerUtil.getHittedNumbers(bet.getNumbers(), apiResultVO.getNumbers());
+		    
 		    CheckedResult checkedResult = prepareResult(apiResultVO, hittedNumbers);
-
+		    checkedResult.setUserId(user.getId());
+		    
+		    bet.setAccumulatedPrize(bet.getAccumulatedPrize().add(checkedResult.getPrize()));
+		    game.setLastDraw(checkedResult.getDrawNumber());
+		    
 		    try {
 			LOG.info(checkedResult.toString());
+
+			betRepository.save(bet);
+			gameRepository.save(game);
 			resultRepository.save(checkedResult);
 		    }
 		    catch (Exception e) {
@@ -122,31 +112,25 @@ public class CheckerService {
 			LOG.error(e.getLocalizedMessage());
 			LOG.error(e.getMessage());
 		    }
-		    User user = userRepository.findById(bet.getUserId()).orElse(null);
-		    if (!user.getId().equals(lastUserId)) {
-			mailCredentials = new MailCredentialsVO();
-			message = new StringBuilder();
 
-			mailCredentialsList.add(mailCredentials);
-
-			mailCredentials.setSubject(game.toUpperCase() + " DRAW - " + checkedResult.getDrawNumber());
-			mailCredentials.setTo(user.getMail());
-			mailCredentials.setMessage(message);
-
-		    }
+		    StringBuilder message = new StringBuilder();
 		    message.append("Draw result: " + checkedResult.getHitNumber() + LINE);
 		    message.append("Hitted Numbers: " + checkedResult.getHittedNumbers() + LINE);
 		    message.append("Prize : R$" + checkedResult.getPrize() + LINE);
+		    message.append("Accumuled Prize : R$" + bet.getAccumulatedPrize() + LINE);
 
-		    lastUserId = bet.getUserId();
+		    MailCredentialsVO mailCredentials = new MailCredentialsVO();
+		    mailCredentials.setSubject(gameName.toUpperCase() + " DRAW - " + checkedResult.getDrawNumber());
+		    mailCredentials.setTo(user.getMail());
+		    mailCredentials.setMessage(message);
+		    
+		    sendMail(mailCredentials);
+
 		}
-
-		for (MailCredentialsVO credential : mailCredentialsList) {
-		    sendMail(credential);
-		}
-
+		
 		LOG.debug("Exit method checkResult()");
 	    }
+
 	}
     }
 
@@ -160,6 +144,7 @@ public class CheckerService {
 	result.setHittedNumbers(hittedNumbers);
 	result.setHitNumber(hittedNumbers.split(",").length);
 	result.setPrize(BigDecimal.ZERO);
+	result.setName(apiResult.getName());
 
 	LOG.debug("Exit method prepareResult(LotofacilApiResultVO apiResult, String hittedNumbers)");
 	return result;

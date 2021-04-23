@@ -22,38 +22,41 @@ import javax.persistence.Id;
 
 @Entity
 public class Game {
-
+    
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     private Long   id;
     private String name;
     private int	   numberMin;
     private int	   numberMax;
-
+    private Long   lastDraw;
+    
     public Game() {
     }
-
+    
     /**
      * @param id
      * @param name
      * @param numberMin
      * @param numberMax
+     * @param lastDraw
      */
-    public Game(Long id, String name, int numberMin, int numberMax) {
+    public Game(Long id, String name, int numberMin, int numberMax, Long lastDraw) {
 	super();
 	this.id = id;
 	this.name = name;
 	this.numberMin = numberMin;
 	this.numberMax = numberMax;
+	this.lastDraw = lastDraw;
     }
-
+    
     /**
      * @return the id
      */
     public Long getId() {
 	return id;
     }
-
+    
     /**
      * @param id
      *            the id to set
@@ -61,14 +64,14 @@ public class Game {
     public void setId(Long id) {
 	this.id = id;
     }
-
+    
     /**
      * @return the name
      */
     public String getName() {
 	return name;
     }
-
+    
     /**
      * @param name
      *            the name to set
@@ -76,14 +79,14 @@ public class Game {
     public void setName(String name) {
 	this.name = name;
     }
-
+    
     /**
      * @return the numberMin
      */
     public int getNumberMin() {
 	return numberMin;
     }
-
+    
     /**
      * @param numberMin
      *            the numberMin to set
@@ -91,14 +94,14 @@ public class Game {
     public void setNumberMin(int numberMin) {
 	this.numberMin = numberMin;
     }
-
+    
     /**
      * @return the numberMax
      */
     public int getNumberMax() {
 	return numberMax;
     }
-
+    
     /**
      * @param numberMax
      *            the numberMax to set
@@ -106,10 +109,25 @@ public class Game {
     public void setNumberMax(int numberMax) {
 	this.numberMax = numberMax;
     }
-
+    
+    /**
+     * @return the lastDraw
+     */
+    public Long getLastDraw() {
+	return lastDraw;
+    }
+    
+    /**
+     * @param lastDraw
+     *            the lastDraw to set
+     */
+    public void setLastDraw(Long lastDraw) {
+	this.lastDraw = lastDraw;
+    }
+    
     @Override
     public String toString() {
-	return "Game [id=" + id + ", name=" + name + ", numberMin=" + numberMin + ", numberMax=" + numberMax + "]";
+	return "Game [id=" + id + ", name=" + name + ", numberMin=" + numberMin + ", numberMax=" + numberMax + ", lastDraw=" + lastDraw + "]";
     }
-
+    
 }

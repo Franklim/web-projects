@@ -23,4 +23,6 @@ import com.lotterychecker.model.Game;
 @Repository
 public interface GameRepository extends JpaRepository<Game, Long> {
     
+    Game findGameByName(String game);
+    
 }
