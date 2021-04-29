@@ -4,8 +4,13 @@
 package com.lotterychecker.util;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import com.lotterychecker.model.CheckedResult;
+import com.lotterychecker.vo.MailCredentialsVO;
 
 /**
  * <pre>
@@ -34,7 +40,7 @@ import com.lotterychecker.model.CheckedResult;
 
 public class CheckerUtil {
     private static Logger LOG = LoggerFactory.getLogger(CheckerUtil.class);
-
+    
     public static void setPrize(CheckedResult result) {
 	LOG.debug("Entry method setPrize(LotofacilResult result)");
 	if (result.getHitNumber() < 11) {
@@ -50,17 +56,15 @@ public class CheckerUtil {
 	}
 	LOG.debug("Exit method setPrize(LotofacilResult result)");
     }
-
+    
     public static String getHittedNumbers(String bet, List<String> drawNumbers) {
 	LOG.debug("Entry method getHittedNumbers(String bet, String result)");
-
 	List<String> betNumbers = Arrays.asList(bet.split(","));
 	Set<String> hittedNumbers = betNumbers.stream().distinct().filter(drawNumbers::contains).collect(Collectors.toSet());
-
 	LOG.debug("Exit method getHittedNumbers(String bet, String result)");
 	return hittedNumbers.toString().replace(" ", "").replace("[", "").replace("]", "");
     }
-
+    
     public static String getApiJSON(String url) {
 	RestTemplate restTemplate = new RestTemplate();
 	HttpHeaders headers = new HttpHeaders();
@@ -69,7 +73,22 @@ public class CheckerUtil {
 	HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
 	ResponseEntity<String> res = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 	return res.getBody();
-
+	
     }
 
+    public static MailCredentialsVO createErrorMailCredentials(String errorMsg, String mail) {
+	StringBuilder message = new StringBuilder();
+	message.append("Was ocurred an error in the application. \n");
+	message.append("errorMsg= " + errorMsg);
+	MailCredentialsVO mailCredentials = new MailCredentialsVO();
+	mailCredentials.setSubject("ERROR: LotteryCheck");
+	mailCredentials.setTo(mail);
+	mailCredentials.setMessage(message);
+	return mailCredentials;
+    }
+    
+    public static String dateTimeFormatter(Instant instant) {
+	DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG).withLocale(Locale.UK).withZone(ZoneId.systemDefault());
+	return formatter.format(instant);
+    }
 }

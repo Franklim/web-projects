@@ -53,6 +53,9 @@ public class CheckerService {
 
     @Value("${application.prop.api.token}")
     private String		    TOKEN_PREFIX;
+    
+    @Value("${application.prop.api.error.mail}")
+    private String		    MAIL;
 
     @Autowired
     private CheckedResultRepository resultRepository;
@@ -78,8 +81,9 @@ public class CheckerService {
 	    apiResultVO = new ObjectMapper().readValue(apiJson, ApiResultVO.class);
 	}
 	catch (IOException e) {
-	    e.printStackTrace();
-	    LOG.error("Error trying while create api object. " + e.getMessage());
+	    String errorMsg = e.getMessage();
+	    LOG.error("Error trying while create api object. " + errorMsg);
+	    sendMail(CheckerUtil.createErrorMailCredentials(errorMsg, MAIL));
 	}
 	
 	Game game = gameRepository.findGameByName(gameName);
@@ -108,9 +112,9 @@ public class CheckerService {
 			resultRepository.save(checkedResult);
 		    }
 		    catch (Exception e) {
-			LOG.error("Error while saving checked result.");
-			LOG.error(e.getLocalizedMessage());
-			LOG.error(e.getMessage());
+			String errorMsg = e.getMessage();
+			sendMail(CheckerUtil.createErrorMailCredentials(errorMsg, MAIL));
+			LOG.error("Error while saving checked result. errorMsg=" + errorMsg);
 		    }
 
 		    StringBuilder message = new StringBuilder();
@@ -125,12 +129,9 @@ public class CheckerService {
 		    mailCredentials.setMessage(message);
 		    
 		    sendMail(mailCredentials);
-
 		}
-		
 		LOG.debug("Exit method checkResult()");
 	    }
-
 	}
     }
 
@@ -163,12 +164,10 @@ public class CheckerService {
 	try {
 	    mailSender.send(message);
 	    LOG.info("Send mail sucess");
-	    
 	}
 	catch (Exception e) {
 	    result = false;
 	    LOG.error("Error while tryng send mail. " + e.getMessage());
-	    
 	}
 	LOG.debug("result=" + result);
 	LOG.debug("Exit method sendMail(MailCredentialsVO credentials)");
