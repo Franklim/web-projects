@@ -16,6 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.lotterychecker.service.CheckerService;
+import com.lotterychecker.util.CheckerConstants;
 import com.lotterychecker.util.CheckerUtil;
 
 /**
@@ -32,32 +33,34 @@ import com.lotterychecker.util.CheckerUtil;
 
 @Component
 public class CheckerScheduled {
-    
-    private static final Logger	LOG		   = LoggerFactory.getLogger(CheckerScheduled.class);
-    
+
+    private static final Logger	LOG = LoggerFactory.getLogger(CheckerScheduled.class);
+
     @Autowired
-    CheckerService		service;
+    private CheckerService	checkService;
     
-    @Value("${application.prop.api.scheduler.game.types}")
+    @Value(CheckerConstants.GAMES_TO_CHECK_PROP)
     private String		games;
 
-    private final String	DELAY_PROP	   = "${application.prop.api.scheduler.delay:3600000}";
-
-    private final String	INITIAL_DELAY_PROP = "${application.prop.api.scheduler.initial.delay:0}";
-    
-    @Scheduled(fixedDelayString = DELAY_PROP, initialDelayString = INITIAL_DELAY_PROP)
+    @Scheduled(initialDelayString = CheckerConstants.INITIAL_DELAY_PROP, fixedDelayString = CheckerConstants.DELAY_PROP)
     private void scheduledCheck() {
 	LOG.debug("Entry method scheduledCheck()");
-	List<String> draws = Arrays.asList(games.split(","));
-	
-	Instant start = Instant.now();
-	LOG.info("START CHECK - " + CheckerUtil.dateTimeFormatter(start));
-	for (String draw : draws) {
-	    service.checkResult(draw);
+
+	List<String> gameList = Arrays.asList(games.split(","));
+	if (gameList != null && gameList.size() > 0) {
+
+	    for (String game : gameList) {
+
+		Instant start = Instant.now();
+		LOG.info("Start check: " + game + " - " + CheckerUtil.dateTimeFormatter(start));
+
+		checkService.checkResult(game);
+
+		Instant end = Instant.now();
+		LOG.info("End check - " + CheckerUtil.dateTimeFormatter(end));
+		LOG.info("Duration: " + Duration.between(start, end).toMillis() + " millis.");
+	    }
+	    LOG.debug("Exit method scheduledCheck()");
 	}
-	Instant end = Instant.now();
-	LOG.info("END CHECK - " + CheckerUtil.dateTimeFormatter(end));
-	LOG.info("CHECK DURATION: " + Duration.between(start, end).toMillis() + " millis.");
-	LOG.debug("Exit method scheduledCheck()");
     }
 }
