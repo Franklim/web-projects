@@ -39,7 +39,6 @@ public class Bet {
     }
 
     /**
-     * @param id
      * @param firstDraw
      * @param lastDraw
      * @param accumulatedPrize
@@ -47,9 +46,8 @@ public class Bet {
      * @param userId
      * @param gameId
      */
-    public Bet(Long id, int firstDraw, int lastDraw, BigDecimal accumulatedPrize, String numbers, Long userId, Long gameId) {
+    public Bet(int firstDraw, int lastDraw, BigDecimal accumulatedPrize, String numbers, Long userId, Long gameId) {
 	super();
-	this.id = id;
 	this.firstDraw = firstDraw;
 	this.lastDraw = lastDraw;
 	this.accumulatedPrize = accumulatedPrize;
