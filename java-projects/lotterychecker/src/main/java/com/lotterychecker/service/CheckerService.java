@@ -5,6 +5,8 @@ package com.lotterychecker.service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -24,6 +26,7 @@ import com.lotterychecker.repository.BetRepository;
 import com.lotterychecker.repository.CheckedResultRepository;
 import com.lotterychecker.repository.GameRepository;
 import com.lotterychecker.repository.UserRepository;
+import com.lotterychecker.util.CheckerConstants;
 import com.lotterychecker.util.CheckerUtil;
 import com.lotterychecker.vo.ApiResultVO;
 import com.lotterychecker.vo.MailCredentialsVO;
@@ -42,19 +45,21 @@ import com.lotterychecker.vo.MailCredentialsVO;
 
 @Service
 public class CheckerService {
-    private Logger		    LOG	 = LoggerFactory.getLogger(CheckerService.class);
-    
-    private String		    LINE = "\n";
-    
-    private ApiResultVO		    apiResultVO;
+    private Logger		    LOG	= LoggerFactory.getLogger(CheckerService.class);
 
-    @Value("${application.prop.api.url}")
+    private ApiResultVO		    apiResultVO;
+    
+    private List<CheckedResult>	    checkedResults;
+    
+    private HashMap<Long, String>   currentUsersBet;
+
+    @Value(CheckerConstants.API_URL_PROP)
     private String		    API_URL;
 
-    @Value("${application.prop.api.token}")
+    @Value(CheckerConstants.TOKEN_PROP)
     private String		    TOKEN_PREFIX;
     
-    @Value("${application.prop.api.error.mail}")
+    @Value(CheckerConstants.MAIL_ERROR_PROP)
     private String		    MAIL;
 
     @Autowired
@@ -74,8 +79,10 @@ public class CheckerService {
     
     public void checkResult(String gameName) {
 	LOG.debug("Entry method checkResult()");
-
+	
 	String URL = API_URL + gameName + TOKEN_PREFIX;
+	LOG.debug("URL=" + URL);
+	
 	try {
 	    String apiJson = CheckerUtil.getApiJSON(URL);
 	    apiResultVO = new ObjectMapper().readValue(apiJson, ApiResultVO.class);
@@ -87,49 +94,96 @@ public class CheckerService {
 	}
 	
 	Game game = gameRepository.findGameByName(gameName);
-	List<Bet> bets = betRepository.findAll();
-
+	
 	if (game != null && game.getLastDraw().compareTo(apiResultVO.getDrawNumber()) == -1) {
 	    
+	    List<Bet> bets = betRepository.findAll();
 	    if (bets != null && bets.size() > 0) {
+		checkedResults = new ArrayList<CheckedResult>();
+		currentUsersBet = new HashMap<Long, String>();
 		
 		for (Bet bet : bets) {
 		    User user = userRepository.findById(bet.getUserId()).orElse(null);
-
-		    String hittedNumbers = CheckerUtil.getHittedNumbers(bet.getNumbers(), apiResultVO.getNumbers());
+		    currentUsersBet.put(user.getId(), user.getMail());
 		    
+		    String hittedNumbers = CheckerUtil.getHittedNumbers(bet.getNumbers(), apiResultVO.getNumbers());
 		    CheckedResult checkedResult = prepareResult(apiResultVO, hittedNumbers);
 		    checkedResult.setUserId(user.getId());
-		    
-		    bet.setAccumulatedPrize(bet.getAccumulatedPrize().add(checkedResult.getPrize()));
 		    game.setLastDraw(checkedResult.getDrawNumber());
 		    
-		    try {
-			LOG.info(checkedResult.toString());
+		    checkedResults.add(checkedResult);
+		    
+		}
+		
+		MailCredentialsVO mailCredentials = new MailCredentialsVO();
+		StringBuilder message = new StringBuilder();
+		mailCredentials.setMessage(message);
 
-			betRepository.save(bet);
-			gameRepository.save(game);
-			resultRepository.save(checkedResult);
-		    }
-		    catch (Exception e) {
-			String errorMsg = e.getMessage();
-			sendMail(CheckerUtil.createErrorMailCredentials(errorMsg, MAIL));
-			LOG.error("Error while saving checked result. errorMsg=" + errorMsg);
-		    }
+		if (checkedResults.size() == 1) {
+		    CheckedResult checkedResult = checkedResults.get(0);
+		    Long currentUserId = checkedResult.getUserId();
+		    String userMail = currentUsersBet.get(currentUserId);
 
-		    StringBuilder message = new StringBuilder();
-		    message.append("Draw result: " + checkedResult.getHitNumber() + LINE);
-		    message.append("Hitted Numbers: " + checkedResult.getHittedNumbers() + LINE);
-		    message.append("Prize : R$" + checkedResult.getPrize() + LINE);
-		    message.append("Accumuled Prize : R$" + bet.getAccumulatedPrize() + LINE);
-
-		    MailCredentialsVO mailCredentials = new MailCredentialsVO();
-		    mailCredentials.setSubject(gameName.toUpperCase() + " DRAW - " + checkedResult.getDrawNumber());
-		    mailCredentials.setTo(user.getMail());
+		    message.append("Draw result: " + checkedResult.getHitNumber() + CheckerConstants.LINE);
+		    message.append("Hitted Numbers: " + checkedResult.getHittedNumbers() + CheckerConstants.LINE);
+		    message.append("Prize : R$" + checkedResult.getPrize() + CheckerConstants.LINE);
+		    
 		    mailCredentials.setMessage(message);
+		    mailCredentials.setSubject(gameName.toUpperCase() + " DRAW - " + checkedResult.getDrawNumber());
+		    mailCredentials.setTo(userMail);
 		    
 		    sendMail(mailCredentials);
+		    
+		} else {
+		    
+		    CheckedResult checkedResult = null;
+		    boolean isOtherUser = false;
+		    Long lastUserId = Long.valueOf(0);
+		    Long currentUserId = Long.valueOf(0);
+		    
+		    for (int i = 0; i < checkedResults.size(); i++) {
+			
+			checkedResult = checkedResults.get(i);
+			currentUserId = checkedResult.getUserId();
+			
+			if (i == 0) {
+			    isOtherUser = false;
+			} else {
+			    isOtherUser = lastUserId.compareTo(currentUserId) != 0;
+			}
+			
+			if (isOtherUser) {
+			    sendMail(mailCredentials);
+			    mailCredentials = new MailCredentialsVO();
+			    message = new StringBuilder();
+			    mailCredentials.setMessage(message);
+			}
+			
+			mailCredentials.setSubject(gameName.toUpperCase() + " DRAW - " + checkedResult.getDrawNumber());
+			mailCredentials.setTo(currentUsersBet.get(currentUserId));
+			message.append("Draw result: " + checkedResult.getHitNumber() + CheckerConstants.LINE);
+			message.append("Hitted Numbers: " + checkedResult.getHittedNumbers() + CheckerConstants.LINE);
+			message.append("Prize : R$" + checkedResult.getPrize() + CheckerConstants.LINE);
+			message.append(CheckerConstants.LINE);
+			
+			if (i == checkedResults.size() - 1) {
+			    sendMail(mailCredentials);
+			}
+			
+			lastUserId = currentUserId;
+		    }
 		}
+		
+		try {
+		    resultRepository.saveAll(checkedResults);
+		    gameRepository.save(game);
+		}
+		catch (RuntimeException e) {
+		    String errorMsg = e.getMessage();
+		    LOG.error("Error trying to save checked results. " + errorMsg);
+		    sendMail(CheckerUtil.createErrorMailCredentials(errorMsg, MAIL));
+		}
+		
 		LOG.debug("Exit method checkResult()");
 	    }
 	}
