@@ -19,6 +19,8 @@ import java.math.BigDecimal;
 
 public class CheckerConstants {
 
+    public static final String	   DDL_AUTO_PROP       = "${spring.jpa.hibernate.ddl-auto}";
+
     public static final String	   DELAY_PROP	       = "${application.prop.api.scheduler.delay:3600000}";
     public static final String	   INITIAL_DELAY_PROP  = "${application.prop.api.scheduler.initial.delay:0}";
     public static final String	   GAMES_TO_CHECK_PROP = "${application.prop.api.scheduler.game.types}";

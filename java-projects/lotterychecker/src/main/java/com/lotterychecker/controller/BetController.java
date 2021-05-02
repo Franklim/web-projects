@@ -28,19 +28,19 @@ import com.lotterychecker.service.BetService;
 
 @RestController
 public class BetController {
-    
+
     private Logger     LOG = LoggerFactory.getLogger(BetController.class);
-    
+
     @Autowired
     private BetService service;
-    
+
     @RequestMapping(value = "save-bet", method = RequestMethod.POST)
-    public String saveGame(@RequestBody Bet bet) {
-	LOG.debug("Entry method saveGame(@RequestBody Game game)");
+    public String saveBet(@RequestBody Bet bet) {
+	LOG.debug("Entry method saveBet(@RequestBody Bet bet)");
 	Bet savedBet = service.saveBet(bet);
 	LOG.debug(savedBet.toString());
-	LOG.debug("Exit method saveGame(@RequestBody Game game)");
+	LOG.debug("Exit method saveBet(@RequestBody Bet bet)");
 	return "Bet created. id=" + savedBet.getId();
     }
-    
+
 }
