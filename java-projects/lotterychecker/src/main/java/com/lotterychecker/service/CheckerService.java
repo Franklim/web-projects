@@ -5,6 +5,7 @@ package com.lotterychecker.service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,7 @@ import com.lotterychecker.repository.GameRepository;
 import com.lotterychecker.repository.UserRepository;
 import com.lotterychecker.util.CheckerConstants;
 import com.lotterychecker.util.CheckerUtil;
+import com.lotterychecker.vo.ApiPrizeVO;
 import com.lotterychecker.vo.ApiResultVO;
 import com.lotterychecker.vo.MailCredentialsVO;
 
@@ -45,37 +47,39 @@ import com.lotterychecker.vo.MailCredentialsVO;
 
 @Service
 public class CheckerService {
-    private Logger		    LOG	= LoggerFactory.getLogger(CheckerService.class);
+    private Logger		      LOG = LoggerFactory.getLogger(CheckerService.class);
     
-    private ApiResultVO		    apiResultVO;
+    private ApiResultVO		      apiResultVO;
 
-    private List<CheckedResult>	    checkedResults;
+    private List<CheckedResult>	      checkedResults;
 
-    private HashMap<Long, String>   currentUsersBet;
+    private HashMap<Long, String>     currentUsersBet;
+    
+    private HashMap<Long, BigDecimal> currentPrizes;
     
     @Value(CheckerConstants.API_URL_PROP)
-    private String		    API_URL;
+    private String		      API_URL;
     
     @Value(CheckerConstants.TOKEN_PROP)
-    private String		    TOKEN_PREFIX;
+    private String		      TOKEN_PREFIX;
 
     @Value(CheckerConstants.MAIL_ERROR_PROP)
-    private String		    MAIL;
+    private String		      MAIL;
     
     @Autowired
-    private CheckedResultRepository resultRepository;
+    private CheckedResultRepository   resultRepository;
 
     @Autowired
-    private BetRepository	    betRepository;
+    private BetRepository	      betRepository;
 
     @Autowired
-    private UserRepository	    userRepository;
+    private UserRepository	      userRepository;
 
     @Autowired
-    private GameRepository	    gameRepository;
+    private GameRepository	      gameRepository;
     
     @Autowired
-    private JavaMailSender	    mailSender;
+    private JavaMailSender	      mailSender;
 
     public boolean checkResult(String gameName) {
 	LOG.debug("Entry method checkResult()");
@@ -104,6 +108,11 @@ public class CheckerService {
 	    if (bets != null && bets.size() > 0) {
 		checkedResults = new ArrayList<CheckedResult>();
 		currentUsersBet = new HashMap<Long, String>();
+		currentPrizes = new HashMap<Long, BigDecimal>();
+		
+		for (ApiPrizeVO prize : apiResultVO.getPrizes()) {
+		    currentPrizes.put(Long.valueOf(prize.getHits()), new BigDecimal(prize.getTotalValue()));
+		}
 
 		for (Bet bet : bets) {
 		    User user = userRepository.findById(bet.getUserId()).orElse(null);
@@ -115,7 +124,6 @@ public class CheckerService {
 		    game.setLastDraw(checkedResult.getDrawNumber());
 
 		    checkedResults.add(checkedResult);
-
 		}
 
 		MailCredentialsVO mailCredentials = new MailCredentialsVO();
@@ -129,14 +137,13 @@ public class CheckerService {
 		    
 		    message.append("Draw result: " + checkedResult.getHitNumber() + CheckerConstants.LINE);
 		    message.append("Hitted Numbers: " + checkedResult.getHittedNumbers() + CheckerConstants.LINE);
-		    message.append("Prize : R$" + checkedResult.getPrize() + CheckerConstants.LINE);
+		    message.append("Prize : R$" + NumberFormat.getCurrencyInstance().format(checkedResult.getPrize()) + CheckerConstants.LINE);
 
 		    mailCredentials.setMessage(message);
 		    mailCredentials.setSubject(gameName.toUpperCase() + " DRAW - " + checkedResult.getDrawNumber());
 		    mailCredentials.setTo(userMail);
 
 		    sendMail(mailCredentials);
-
 		} else {
 
 		    CheckedResult checkedResult = null;
@@ -166,7 +173,7 @@ public class CheckerService {
 			mailCredentials.setTo(currentUsersBet.get(currentUserId));
 			message.append("Draw result: " + checkedResult.getHitNumber() + CheckerConstants.LINE);
 			message.append("Hitted Numbers: " + checkedResult.getHittedNumbers() + CheckerConstants.LINE);
-			message.append("Prize : R$" + checkedResult.getPrize() + CheckerConstants.LINE);
+			message.append("Prize : R$" + NumberFormat.getCurrencyInstance().format(checkedResult.getPrize()) + CheckerConstants.LINE);
 			message.append(CheckerConstants.LINE);
 
 			if (i == checkedResults.size() - 1) {
@@ -187,7 +194,6 @@ public class CheckerService {
 		    sendMail(CheckerUtil.createErrorMailCredentials(errorMsg, MAIL));
 		    result = false;
 		}
-
 		LOG.debug("Exit method checkResult()");
 	    }
 	}
@@ -197,15 +203,19 @@ public class CheckerService {
     private CheckedResult prepareResult(ApiResultVO apiResult, String hittedNumbers) {
 	LOG.debug("Entry method prepareResult(LotofacilApiResultVO apiResult, String hittedNumbers)");
 	CheckedResult result = new CheckedResult();
-	
+
 	result.setDrawNumber(apiResult.getDrawNumber());
 	result.setDate(apiResult.getDate());
 	result.setNumbers(apiResult.getNumbers().toString());
 	result.setHittedNumbers(hittedNumbers);
-	result.setHitNumber(hittedNumbers.split(",").length);
-	result.setPrize(BigDecimal.ZERO);
 	result.setName(apiResult.getName());
-	
+
+	int hits = hittedNumbers.split(",").length;
+	result.setHitNumber(hits);
+
+	BigDecimal prize = currentPrizes.get(Long.valueOf(hits));
+	result.setPrize(prize != null ? prize : BigDecimal.ZERO);
+
 	LOG.debug("Exit method prepareResult(LotofacilApiResultVO apiResult, String hittedNumbers)");
 	return result;
     }
@@ -232,5 +242,4 @@ public class CheckerService {
 	LOG.debug("Exit method sendMail(MailCredentialsVO credentials)");
 	return result;
     }
-    
 }

@@ -24,31 +24,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ApiResultVO {
     
     @JsonProperty("numero_concurso")
-    private Long	 drawNumber;
+    private Long	     drawNumber;
     @JsonProperty("data_concurso")
-    private String	 date;
+    private String	     date;
     @JsonProperty("dezenas")
-    private List<String> numbers;
+    private List<String>     numbers;
     @JsonProperty("nome")
-    private String	 name;
+    private String	     name;
+    @JsonProperty("premiacao")
+    private List<ApiPrizeVO> prizes;
     
     public ApiResultVO() {
     }
-    
+
     /**
      * @param drawNumber
      * @param date
      * @param numbers
      * @param name
+     * @param prizes
      */
-    public ApiResultVO(Long drawNumber, String date, List<String> numbers, String name) {
+    public ApiResultVO(Long drawNumber, String date, List<String> numbers, String name, List<ApiPrizeVO> prizes) {
 	super();
 	this.drawNumber = drawNumber;
 	this.date = date;
 	this.numbers = numbers;
 	this.name = name;
+	this.prizes = prizes;
     }
-    
+
     /**
      * @return the drawNumber
      */
@@ -108,10 +112,20 @@ public class ApiResultVO {
     public void setName(String name) {
 	this.name = name;
     }
-    
-    @Override
-    public String toString() {
-	return "ApiResultVO [drawNumber=" + drawNumber + ", date=" + date + ", numbers=" + numbers + ", name=" + name + "]";
+
+    /**
+     * @return the prizes
+     */
+    public List<ApiPrizeVO> getPrizes() {
+	return prizes;
+    }
+
+    /**
+     * @param prizes
+     *            the prizes to set
+     */
+    public void setPrizes(List<ApiPrizeVO> prizes) {
+	this.prizes = prizes;
     }
     
 }
