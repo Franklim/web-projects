@@ -3,7 +3,6 @@
  */
 package com.lotterychecker.util;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -11,7 +10,7 @@ import java.time.format.FormatStyle;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -23,7 +22,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import com.lotterychecker.model.CheckedResult;
 import com.lotterychecker.vo.MailCredentialsVO;
 
 /**
@@ -40,50 +38,35 @@ import com.lotterychecker.vo.MailCredentialsVO;
 
 public class CheckerUtil {
     private static Logger LOG = LoggerFactory.getLogger(CheckerUtil.class);
-
-    public static void setPrize(CheckedResult result) {
-	LOG.debug("Entry method setPrize(LotofacilResult result)");
-	if (result.getHitNumber() < 11) {
-	    result.setPrize(BigDecimal.ZERO);
-	} else if (result.getHitNumber() == 11) {
-	    result.setPrize(CheckerConstants.PRIZE_11_HITS);
-	} else if (result.getHitNumber() == 12) {
-	    result.setPrize(CheckerConstants.PRIZE_12_HITS);
-	} else if (result.getHitNumber() == 13) {
-	    result.setPrize(CheckerConstants.PRIZE_13_HITS);
-	} else {
-	    result.setPrize(BigDecimal.TEN);
-	}
-	LOG.debug("Exit method setPrize(LotofacilResult result)");
-    }
-
+    
     public static String getHittedNumbers(String betNumbers, List<String> drawNumbers) {
 	LOG.debug("Entry method getHittedNumbers(String betNumbers, List<String> drawNumbers)");
-
+	
 	List<String> betNumbersList = Arrays.asList(betNumbers.split(","));
-	Set<String> hittedNumbers = betNumbersList.stream().distinct().filter(drawNumbers::contains).collect(Collectors.toSet());
+	TreeSet<String> orderedHittedNumbers = new TreeSet<String>();
+	orderedHittedNumbers.addAll(betNumbersList.stream().distinct().filter(drawNumbers::contains).collect(Collectors.toSet()));
 
 	LOG.debug("Exit method getHittedNumbers(String betNumbers, List<String> drawNumbers)");
-	return hittedNumbers.toString().replace(" ", "").replace("[", "").replace("]", "");
+	return orderedHittedNumbers.toString().replace(" ", "").replace("[", "").replace("]", "");
     }
-
+    
     public static String getApiJSON(String url) {
 	LOG.debug("Entry method getApiJSON(String url)");
-
+	
 	RestTemplate restTemplate = new RestTemplate();
 	HttpHeaders headers = new HttpHeaders();
 	headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 	headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 	HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
 	ResponseEntity<String> res = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
+	
 	LOG.debug("Exit method getApiJSON(String url)");
 	return res.getBody();
     }
-    
+
     public static MailCredentialsVO createErrorMailCredentials(String errorMsg, String mail) {
 	LOG.debug("Entry method createErrorMailCredentials(String errorMsg, String mail)");
-	
+
 	StringBuilder message = new StringBuilder();
 	message.append("Was ocurred an error in the application. \n");
 	message.append("errorMsg= " + errorMsg);
@@ -91,17 +74,17 @@ public class CheckerUtil {
 	mailCredentials.setSubject("ERROR: LotteryCheck");
 	mailCredentials.setTo(mail);
 	mailCredentials.setMessage(message);
-	
+
 	LOG.debug("Exit method createErrorMailCredentials(String errorMsg, String mail)");
 	return mailCredentials;
     }
-
+    
     public static String dateTimeFormatter(Instant instant) {
 	LOG.debug("Entry method dateTimeFormatter(Instant instant)");
-
+	
 	DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG).withLocale(Locale.UK).withZone(ZoneId.systemDefault());
 	String formattedData = formatter.format(instant);
-
+	
 	LOG.debug("formattedData=" + formattedData);
 	LOG.debug("Exit method dateTimeFormatter(Instant instant)");
 	return formattedData;

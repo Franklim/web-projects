@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lotterychecker.model.Bet;
+import com.lotterychecker.model.Game;
 import com.lotterychecker.repository.BetRepository;
+import com.lotterychecker.repository.GameRepository;
 
 /**
  * <pre>
@@ -26,10 +28,13 @@ import com.lotterychecker.repository.BetRepository;
 @Service
 public class BetService {
     
-    private Logger	  LOG = LoggerFactory.getLogger(BetService.class);
+    private Logger	   LOG = LoggerFactory.getLogger(BetService.class);
     
     @Autowired
-    private BetRepository repository;
+    private BetRepository  repository;
+    
+    @Autowired
+    private GameRepository gameRepository;
     
     public Bet saveBet(Bet bet) {
 	LOG.debug("Entry method saveBet(Bet bet)");
@@ -52,8 +57,32 @@ public class BetService {
     
     private void validBet(Bet bet) {
 	LOG.debug("Entry method validBet(Bet bet)");
-	
-	// TODO: Game Limits method
+
+	Game game = gameRepository.findById(bet.getGameId()).orElse(null);
+	if (game != null) {
+
+	    String[] numbers = bet.getNumbers().split(",");
+	    int max = game.getLastPosibleNumber();
+	    
+	    for (String eachNumber : numbers) {
+		if (Integer.valueOf(eachNumber).compareTo(max) > 0) {
+		    String msg = "The bet number should in a range : 0 and " + max;
+		    LOG.error(msg);
+		    throw new RuntimeException(msg);
+		}
+	    }
+
+	    if (numbers.length < game.getNumberMin() || numbers.length > game.getNumberMax()) {
+		String msg = "The bet must to have at least " + game.getNumberMin() + " and maximum " + game.getNumberMax() + " numbers.";
+		LOG.error(msg);
+		throw new RuntimeException(msg);
+
+	    }
+	} else {
+	    String msg = "Cannot find a game with id :" + bet.getGameId();
+	    LOG.error(msg);
+	    throw new RuntimeException(msg);
+	}
 	
 	LOG.debug("Exit method validBet(Bet bet)");
     }

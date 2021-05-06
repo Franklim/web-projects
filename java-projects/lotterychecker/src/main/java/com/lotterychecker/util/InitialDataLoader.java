@@ -54,12 +54,14 @@ public class InitialDataLoader implements ApplicationRunner {
 	    LOG.info("Starting initial values");
 
 	    User user = userRepository.save(new User("Paulo Franklim", "paulofranklim@hotmail.com", "1234"));
-	    Game game = gameRepository.save(new Game("lotofacil", 15, 20, (long) 0));
-	    Bet bet = betRepository.save(new Bet(0, 99999, BigDecimal.ZERO, "01,03,05,06,08,09,10,13,14,16,18,20,21,22,24", user.getId(), game.getId()));
 
-	    LOG.info("user=" + user);
-	    LOG.info("game=" + game);
-	    LOG.info("bet=" + bet);
+	    Game lotofacil = gameRepository.save(new Game("lotofacil", 15, 20, 25, (long) 0));
+	    Game megasena = gameRepository.save(new Game("megasena", 6, 15, 60, (long) 0));
+	    gameRepository.save(new Game("quina", 5, 15, 80, (long) 0));
+
+	    betRepository.save(new Bet(true, BigDecimal.ZERO, "01,03,05,06,08,09,10,13,14,16,18,20,21,22,24", user.getId(), lotofacil.getId()));
+	    betRepository.save(new Bet(true, BigDecimal.ZERO, "18,27,40,36,38,20,14,37,03,55,44,46,01,02,09", user.getId(), megasena.getId()));
+
 	    LOG.info("Finishing initial values");
 	}
     }

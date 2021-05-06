@@ -3,7 +3,10 @@
  */
 package com.lotterychecker.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.lotterychecker.model.Bet;
@@ -22,5 +25,12 @@ import com.lotterychecker.model.Bet;
 
 @Repository
 public interface BetRepository extends JpaRepository<Bet, Long> {
+
+    /**
+     * @param id
+     * @return
+     */
+    @Query("select b from Bet b where b.gameId = ?1")
+    public List<Bet> findAllBetsForGame(Long gameId);
 
 }
