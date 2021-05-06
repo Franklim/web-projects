@@ -10,7 +10,7 @@ import java.time.format.FormatStyle;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -43,10 +43,11 @@ public class CheckerUtil {
 	LOG.debug("Entry method getHittedNumbers(String betNumbers, List<String> drawNumbers)");
 	
 	List<String> betNumbersList = Arrays.asList(betNumbers.split(","));
-	Set<String> hittedNumbers = betNumbersList.stream().distinct().filter(drawNumbers::contains).collect(Collectors.toSet());
-	
+	TreeSet<String> orderedHittedNumbers = new TreeSet<String>();
+	orderedHittedNumbers.addAll(betNumbersList.stream().distinct().filter(drawNumbers::contains).collect(Collectors.toSet()));
+
 	LOG.debug("Exit method getHittedNumbers(String betNumbers, List<String> drawNumbers)");
-	return hittedNumbers.toString().replace(" ", "").replace("[", "").replace("]", "");
+	return orderedHittedNumbers.toString().replace(" ", "").replace("[", "").replace("]", "");
     }
     
     public static String getApiJSON(String url) {

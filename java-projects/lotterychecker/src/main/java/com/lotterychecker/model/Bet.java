@@ -28,8 +28,7 @@ public class Bet {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long       id;
-    private int	       firstDraw;
-    private int	       lastDraw;
+    private boolean    active;
     private BigDecimal accumulatedPrize;
     private String     numbers;
     private Long       userId;
@@ -37,32 +36,30 @@ public class Bet {
     
     public Bet() {
     }
-
+    
     /**
-     * @param firstDraw
-     * @param lastDraw
+     * @param active
      * @param accumulatedPrize
      * @param numbers
      * @param userId
      * @param gameId
      */
-    public Bet(int firstDraw, int lastDraw, BigDecimal accumulatedPrize, String numbers, Long userId, Long gameId) {
+    public Bet(boolean active, BigDecimal accumulatedPrize, String numbers, Long userId, Long gameId) {
 	super();
-	this.firstDraw = firstDraw;
-	this.lastDraw = lastDraw;
+	this.active = active;
 	this.accumulatedPrize = accumulatedPrize;
 	this.numbers = numbers;
 	this.userId = userId;
 	this.gameId = gameId;
     }
-
+    
     /**
      * @return the id
      */
     public Long getId() {
 	return id;
     }
-
+    
     /**
      * @param id
      *            the id to set
@@ -70,44 +67,29 @@ public class Bet {
     public void setId(Long id) {
 	this.id = id;
     }
-
+    
     /**
-     * @return the firstDraw
+     * @return the active
      */
-    public int getFirstDraw() {
-	return firstDraw;
+    public boolean isActive() {
+	return active;
     }
-
+    
     /**
-     * @param firstDraw
-     *            the firstDraw to set
+     * @param active
+     *            the active to set
      */
-    public void setFirstDraw(int firstDraw) {
-	this.firstDraw = firstDraw;
+    public void setActive(boolean active) {
+	this.active = active;
     }
-
-    /**
-     * @return the lastDraw
-     */
-    public int getLastDraw() {
-	return lastDraw;
-    }
-
-    /**
-     * @param lastDraw
-     *            the lastDraw to set
-     */
-    public void setLastDraw(int lastDraw) {
-	this.lastDraw = lastDraw;
-    }
-
+    
     /**
      * @return the accumulatedPrize
      */
     public BigDecimal getAccumulatedPrize() {
 	return accumulatedPrize;
     }
-
+    
     /**
      * @param accumulatedPrize
      *            the accumulatedPrize to set
@@ -115,14 +97,14 @@ public class Bet {
     public void setAccumulatedPrize(BigDecimal accumulatedPrize) {
 	this.accumulatedPrize = accumulatedPrize;
     }
-
+    
     /**
      * @return the numbers
      */
     public String getNumbers() {
 	return numbers;
     }
-
+    
     /**
      * @param numbers
      *            the numbers to set
@@ -130,14 +112,14 @@ public class Bet {
     public void setNumbers(String numbers) {
 	this.numbers = numbers;
     }
-
+    
     /**
      * @return the userId
      */
     public Long getUserId() {
 	return userId;
     }
-
+    
     /**
      * @param userId
      *            the userId to set
@@ -145,14 +127,14 @@ public class Bet {
     public void setUserId(Long userId) {
 	this.userId = userId;
     }
-
+    
     /**
      * @return the gameId
      */
     public Long getGameId() {
 	return gameId;
     }
-
+    
     /**
      * @param gameId
      *            the gameId to set
@@ -160,11 +142,11 @@ public class Bet {
     public void setGameId(Long gameId) {
 	this.gameId = gameId;
     }
-
+    
     @Override
     public String toString() {
-	return "Bet [id=" + id + ", firstDraw=" + firstDraw + ", lastDraw=" + lastDraw + ", accumulatedPrize=" + accumulatedPrize + ", numbers=" + numbers
-	        + ", userId=" + userId + ", gameId=" + gameId + "]";
+	return "Bet [id=" + id + ", active=" + active + ", accumulatedPrize=" + accumulatedPrize + ", numbers=" + numbers + ", userId=" + userId + ", gameId="
+	        + gameId + "]";
     }
-
+    
 }

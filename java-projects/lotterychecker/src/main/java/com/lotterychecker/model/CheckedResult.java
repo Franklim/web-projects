@@ -24,43 +24,40 @@ import javax.persistence.Id;
 
 @Entity
 public class CheckedResult {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long       id;
-    private String     name;
+    private String     gameName;
     private Long       drawNumber;
-    private String     date;
-    private String     numbers;
+    private String     drawDate;
+    private String     drawNumbers;
     private String     hittedNumbers;
-    private int	       hitNumber;
+    private int	       hits;
     private BigDecimal prize;
     private Long       userId;
-
+    
     public CheckedResult() {
     }
-    
+
     /**
-     * @param id
-     * @param name
+     * @param gameName
      * @param drawNumber
-     * @param date
-     * @param numbers
+     * @param drawDate
+     * @param drawNumbers
      * @param hittedNumbers
-     * @param hitNumber
+     * @param hits
      * @param prize
      * @param userId
      */
-    public CheckedResult(Long id, String name, Long drawNumber, String date, String numbers, String hittedNumbers, int hitNumber, BigDecimal prize,
-            Long userId) {
+    public CheckedResult(String gameName, Long drawNumber, String drawDate, String drawNumbers, String hittedNumbers, int hits, BigDecimal prize, Long userId) {
 	super();
-	this.id = id;
-	this.name = name;
+	this.gameName = gameName;
 	this.drawNumber = drawNumber;
-	this.date = date;
-	this.numbers = numbers;
+	this.drawDate = drawDate;
+	this.drawNumbers = drawNumbers;
 	this.hittedNumbers = hittedNumbers;
-	this.hitNumber = hitNumber;
+	this.hits = hits;
 	this.prize = prize;
 	this.userId = userId;
     }
@@ -81,18 +78,18 @@ public class CheckedResult {
     }
     
     /**
-     * @return the name
+     * @return the gameName
      */
-    public String getName() {
-	return name;
+    public String getGameName() {
+	return gameName;
     }
     
     /**
-     * @param name
-     *            the name to set
+     * @param gameName
+     *            the gameName to set
      */
-    public void setName(String name) {
-	this.name = name;
+    public void setGameName(String gameName) {
+	this.gameName = gameName;
     }
     
     /**
@@ -111,33 +108,33 @@ public class CheckedResult {
     }
     
     /**
-     * @return the date
+     * @return the drawDate
      */
-    public String getDate() {
-	return date;
+    public String getDrawDate() {
+	return drawDate;
     }
     
     /**
-     * @param date
-     *            the date to set
+     * @param drawDate
+     *            the drawDate to set
      */
-    public void setDate(String date) {
-	this.date = date;
+    public void setDrawDate(String drawDate) {
+	this.drawDate = drawDate;
     }
     
     /**
-     * @return the numbers
+     * @return the drawNumbers
      */
-    public String getNumbers() {
-	return numbers;
+    public String getDrawNumbers() {
+	return drawNumbers;
     }
     
     /**
-     * @param numbers
-     *            the numbers to set
+     * @param drawNumbers
+     *            the drawNumbers to set
      */
-    public void setNumbers(String numbers) {
-	this.numbers = numbers;
+    public void setDrawNumbers(String drawNumbers) {
+	this.drawNumbers = drawNumbers;
     }
     
     /**
@@ -156,18 +153,18 @@ public class CheckedResult {
     }
     
     /**
-     * @return the hitNumber
+     * @return the hits
      */
-    public int getHitNumber() {
-	return hitNumber;
+    public int getHits() {
+	return hits;
     }
     
     /**
-     * @param hitNumber
-     *            the hitNumber to set
+     * @param hits
+     *            the hits to set
      */
-    public void setHitNumber(int hitNumber) {
-	this.hitNumber = hitNumber;
+    public void setHits(int hits) {
+	this.hits = hits;
     }
     
     /**
@@ -202,8 +199,8 @@ public class CheckedResult {
     
     @Override
     public String toString() {
-	return "CheckedResult [id=" + id + ", name=" + name + ", drawNumber=" + drawNumber + ", date=" + date + ", numbers=" + numbers + ", hittedNumbers="
-	        + hittedNumbers + ", hitNumber=" + hitNumber + ", prize=" + prize + ", userId=" + userId + "]";
+	return "CheckedResult [id=" + id + ", gameName=" + gameName + ", drawNumber=" + drawNumber + ", drawDate=" + drawDate + ", drawNumbers=" + drawNumbers
+	        + ", hittedNumbers=" + hittedNumbers + ", hits=" + hits + ", prize=" + prize + ", userId=" + userId + "]";
     }
     
 }

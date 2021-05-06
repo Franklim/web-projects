@@ -29,25 +29,28 @@ public class Game {
     private String name;
     private int	   numberMin;
     private int	   numberMax;
+    private int	   lastPosibleNumber;
     private Long   lastDraw;
 
     public Game() {
     }
-
+    
     /**
      * @param name
      * @param numberMin
      * @param numberMax
+     * @param lastPosibleNumber
      * @param lastDraw
      */
-    public Game(String name, int numberMin, int numberMax, Long lastDraw) {
+    public Game(String name, int numberMin, int numberMax, int lastPosibleNumber, Long lastDraw) {
 	super();
 	this.name = name;
 	this.numberMin = numberMin;
 	this.numberMax = numberMax;
+	this.lastPosibleNumber = lastPosibleNumber;
 	this.lastDraw = lastDraw;
     }
-
+    
     /**
      * @return the id
      */
@@ -107,7 +110,22 @@ public class Game {
     public void setNumberMax(int numberMax) {
 	this.numberMax = numberMax;
     }
-
+    
+    /**
+     * @return the lastPosibleNumber
+     */
+    public int getLastPosibleNumber() {
+	return lastPosibleNumber;
+    }
+    
+    /**
+     * @param lastPosibleNumber
+     *            the lastPosibleNumber to set
+     */
+    public void setLastPosibleNumber(int lastPosibleNumber) {
+	this.lastPosibleNumber = lastPosibleNumber;
+    }
+    
     /**
      * @return the lastDraw
      */
@@ -122,10 +140,11 @@ public class Game {
     public void setLastDraw(Long lastDraw) {
 	this.lastDraw = lastDraw;
     }
-
+    
     @Override
     public String toString() {
-	return "Game [id=" + id + ", name=" + name + ", numberMin=" + numberMin + ", numberMax=" + numberMax + ", lastDraw=" + lastDraw + "]";
+	return "Game [id=" + id + ", name=" + name + ", numberMin=" + numberMin + ", numberMax=" + numberMax + ", lastPosibleNumber=" + lastPosibleNumber
+	        + ", lastDraw=" + lastDraw + "]";
     }
-
+    
 }

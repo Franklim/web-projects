@@ -104,7 +104,8 @@ public class CheckerService {
 
 	if (game != null && game.getLastDraw().compareTo(apiResultVO.getDrawNumber()) == -1) {
 
-	    List<Bet> bets = betRepository.findAll();
+	    List<Bet> bets = betRepository.findAllBetsForGame(game.getId());
+
 	    if (bets != null && bets.size() > 0) {
 		checkedResults = new ArrayList<CheckedResult>();
 		currentUsersBet = new HashMap<Long, String>();
@@ -135,7 +136,7 @@ public class CheckerService {
 		    Long currentUserId = checkedResult.getUserId();
 		    String userMail = currentUsersBet.get(currentUserId);
 		    
-		    message.append("Draw result: " + checkedResult.getHitNumber() + CheckerConstants.LINE);
+		    message.append("Draw result: " + checkedResult.getHits() + CheckerConstants.LINE);
 		    message.append("Hitted Numbers: " + checkedResult.getHittedNumbers() + CheckerConstants.LINE);
 		    message.append("Prize : R$" + NumberFormat.getCurrencyInstance().format(checkedResult.getPrize()) + CheckerConstants.LINE);
 
@@ -171,7 +172,7 @@ public class CheckerService {
 
 			mailCredentials.setSubject(gameName.toUpperCase() + " DRAW - " + checkedResult.getDrawNumber());
 			mailCredentials.setTo(currentUsersBet.get(currentUserId));
-			message.append("Draw result: " + checkedResult.getHitNumber() + CheckerConstants.LINE);
+			message.append("Draw result: " + checkedResult.getHits() + CheckerConstants.LINE);
 			message.append("Hitted Numbers: " + checkedResult.getHittedNumbers() + CheckerConstants.LINE);
 			message.append("Prize : R$" + NumberFormat.getCurrencyInstance().format(checkedResult.getPrize()) + CheckerConstants.LINE);
 			message.append(CheckerConstants.LINE);
@@ -205,13 +206,13 @@ public class CheckerService {
 	CheckedResult result = new CheckedResult();
 
 	result.setDrawNumber(apiResult.getDrawNumber());
-	result.setDate(apiResult.getDate());
-	result.setNumbers(apiResult.getNumbers().toString());
+	result.setDrawDate(apiResult.getDate());
+	result.setDrawNumbers(apiResult.getNumbers().toString());
 	result.setHittedNumbers(hittedNumbers);
-	result.setName(apiResult.getName());
+	result.setGameName(apiResult.getName());
 
 	int hits = hittedNumbers.split(",").length;
-	result.setHitNumber(hits);
+	result.setHits(hits);
 
 	BigDecimal prize = currentPrizes.get(Long.valueOf(hits));
 	result.setPrize(prize != null ? prize : BigDecimal.ZERO);

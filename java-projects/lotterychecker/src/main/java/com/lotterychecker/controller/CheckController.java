@@ -27,18 +27,18 @@ import com.lotterychecker.service.CheckerService;
 
 @RestController
 public class CheckController {
-    
+
     private Logger LOG = LoggerFactory.getLogger(CheckController.class);
-    
+
     @Autowired
     CheckerService service;
-    
+
     @RequestMapping(value = "/check-result/{game}", method = RequestMethod.GET)
-    public boolean checResultk(@PathVariable("game") String game) {
-	LOG.debug("Entry method checResultk(@PathVariable(\"game\") String game)");
+    public boolean checkResult(@PathVariable("game") String game) {
+	LOG.debug("Entry method checkResult(@PathVariable(\"game\") String game)");
 	boolean result = service.checkResult(game);
-	LOG.debug("Exit method checResultk(@PathVariable(\"game\") String game)");
+	LOG.debug("Exit method checkResult(@PathVariable(\"game\") String game)");
 	return result;
     }
-    
+
 }
