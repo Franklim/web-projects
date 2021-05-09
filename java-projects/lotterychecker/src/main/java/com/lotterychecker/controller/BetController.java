@@ -3,9 +3,12 @@
  */
 package com.lotterychecker.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,12 +31,12 @@ import com.lotterychecker.service.BetService;
 
 @RestController
 public class BetController {
-
+    
     private Logger     LOG = LoggerFactory.getLogger(BetController.class);
-
+    
     @Autowired
     private BetService service;
-
+    
     @RequestMapping(value = "save-bet", method = RequestMethod.POST)
     public String saveBet(@RequestBody Bet bet) {
 	LOG.debug("Entry method saveBet(@RequestBody Bet bet)");
@@ -43,4 +46,22 @@ public class BetController {
 	return "Bet created. id=" + savedBet.getId();
     }
 
+    @RequestMapping(value = "load-bet/{id}", method = RequestMethod.GET)
+    public Bet loadBet(@PathVariable("id") String id) {
+	LOG.debug("Entry method loadBet(@PathVariable(\"id\") String id) ");
+	
+	Bet bet = service.getBet(id);
+	LOG.debug("Exit method loadBet(@PathVariable(\"id\") String id)");
+	return bet;
+    }
+
+    @RequestMapping(value = "load-bets", method = RequestMethod.GET)
+    public List<Bet> loadAllBets() {
+	LOG.debug("Entry method loadAllBets()");
+	
+	List<Bet> bets = service.getAllBets();
+	LOG.debug("Exit method loadAllBets()");
+	return bets;
+    }
+    
 }
