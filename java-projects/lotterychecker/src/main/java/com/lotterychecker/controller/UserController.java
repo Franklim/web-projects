@@ -47,20 +47,20 @@ public class UserController {
     }
     
     @RequestMapping(value = "load-user/{id}", method = RequestMethod.GET)
-    public User loadtUser(@PathVariable("id") String id) {
-	LOG.debug("Entry method getUser(@PathVariable(\"id\") String id) ");
+    public User loadUser(@PathVariable("id") String id) {
+	LOG.debug("Entry method loadUser(@PathVariable(\"id\") String id) ");
 	
 	User user = service.getUser(id);
-	LOG.debug("Exit method getUser(@PathVariable(\"id\") String id)");
+	LOG.debug("Exit method loadUser(@PathVariable(\"id\") String id)");
 	return user;
     }
 
     @RequestMapping(value = "load-users", method = RequestMethod.GET)
     public List<User> loadAllUsers() {
-	LOG.debug("Entry method getAllUsers()");
+	LOG.debug("Entry method loadAllUsers()");
 	
 	List<User> users = service.getAllUsers();
-	LOG.debug("Exit method getAllUsers()");
+	LOG.debug("Exit method loadAllUsers()");
 	return users;
     }
     
