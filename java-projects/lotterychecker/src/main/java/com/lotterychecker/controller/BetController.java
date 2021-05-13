@@ -25,18 +25,18 @@ import com.lotterychecker.service.BetService;
  * Log File       : N/A
  * Output file    : N/A
  *
- * Copyright 2020 github.com/pfranklim
+ * Copyright 2020 github.com/paulofranklim
  * </pre>
  */
 
 @RestController
 public class BetController {
-    
+
     private Logger     LOG = LoggerFactory.getLogger(BetController.class);
-    
+
     @Autowired
     private BetService service;
-    
+
     @RequestMapping(value = "save-bet", method = RequestMethod.POST)
     public String saveBet(@RequestBody Bet bet) {
 	LOG.debug("Entry method saveBet(@RequestBody Bet bet)");
@@ -45,23 +45,23 @@ public class BetController {
 	LOG.debug("Exit method saveBet(@RequestBody Bet bet)");
 	return "Bet created. id=" + savedBet.getId();
     }
-
+    
     @RequestMapping(value = "load-bet/{id}", method = RequestMethod.GET)
     public Bet loadBet(@PathVariable("id") String id) {
 	LOG.debug("Entry method loadBet(@PathVariable(\"id\") String id) ");
-	
+
 	Bet bet = service.getBet(id);
 	LOG.debug("Exit method loadBet(@PathVariable(\"id\") String id)");
 	return bet;
     }
-
+    
     @RequestMapping(value = "load-bets", method = RequestMethod.GET)
     public List<Bet> loadAllBets() {
 	LOG.debug("Entry method loadAllBets()");
-	
+
 	List<Bet> bets = service.getAllBets();
 	LOG.debug("Exit method loadAllBets()");
 	return bets;
     }
-    
+
 }

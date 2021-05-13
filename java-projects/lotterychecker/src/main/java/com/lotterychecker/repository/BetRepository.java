@@ -19,18 +19,18 @@ import com.lotterychecker.model.Bet;
  * Log File       : N/A
  * Output file    : N/A
  *
- * Copyright 2020 github.com/pfranklim
+ * Copyright 2020 github.com/paulofranklim
  * </pre>
  */
 
 @Repository
 public interface BetRepository extends JpaRepository<Bet, Long> {
-
+    
     /**
      * @param id
      * @return
      */
     @Query("select b from Bet b where b.gameId = ?1")
     public List<Bet> findAllBetsForGame(Long gameId);
-
+    
 }

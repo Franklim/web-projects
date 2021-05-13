@@ -16,13 +16,13 @@ import com.lotterychecker.model.Game;
  * Log File       : N/A
  * Output file    : N/A
  *
- * Copyright 2020 github.com/pfranklim
+ * Copyright 2020 github.com/paulofranklim
  * </pre>
  */
 
 @Repository
 public interface GameRepository extends JpaRepository<Game, Long> {
-    
+
     Game findGameByName(String game);
-    
+
 }

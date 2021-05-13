@@ -16,11 +16,11 @@ import com.lotterychecker.model.CheckedResult;
  * Log File       : N/A
  * Output file    : N/A
  *
- * Copyright 2020 github.com/pfranklim
+ * Copyright 2020 github.com/paulofranklim
  * </pre>
  */
 
 @Repository
 public interface CheckedResultRepository extends JpaRepository<CheckedResult, Long> {
-    
+
 }
