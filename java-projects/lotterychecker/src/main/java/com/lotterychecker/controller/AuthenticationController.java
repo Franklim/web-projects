@@ -22,27 +22,27 @@ import com.lotterychecker.service.AuthenticationService;
 * Log File       : N/A
 * Output file    : N/A
 *
- * Copyright 2021
+ * Copyright 2021 github.com/paulofranklim
  * </pre>
  */
 
 @RestController
 public class AuthenticationController {
-    
+
     private Logger		  LOG = LoggerFactory.getLogger(AuthenticationController.class);
-    
+
     @Autowired
     private AuthenticationService service;
-
+    
     @RequestMapping(value = "auth", method = RequestMethod.POST)
     public User auth(@RequestBody User authUser) {
 	LOG.debug("Entry method auth(@RequestBody User authUser)");
-
+	
 	String mail = authUser.getMail();
 	String password = authUser.getPassword();
-
-	User user = service.auth(mail, password);
 	
+	User user = service.auth(mail, password);
+
 	LOG.debug("Exit method auth(@RequestBody User authUser)");
 	return user;
     }

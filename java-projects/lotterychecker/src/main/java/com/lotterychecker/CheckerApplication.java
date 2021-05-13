@@ -17,7 +17,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * Log File       : N/A
  * Output file    : N/A
  *
- * Copyright 2020 github.com/pfranklim
+ * Copyright 2020 github.com/paulofranklim
  * </pre>
  */
 
@@ -29,7 +29,7 @@ public class CheckerApplication {
     public static void main(String[] args) {
 	SpringApplication.run(CheckerApplication.class, args);
     }
-    
+
     @Bean
     public WebMvcConfigurer corsConfigurer() {
 	return new WebMvcConfigurer() {
